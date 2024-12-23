@@ -244,7 +244,7 @@ Here it is apparent that the **Northeast Avalon** region leads by a wide margin 
     scale_x_continuous(breaks=seq(2006,2020,1))
 ```
 
-There is a clear, **positive** trend in the number of sexual violations against children, with respect to the Northeast Avalon region.
+There is a clear, **positive** trend in the number of sexual violations against children, with respect to the **Northeast Avalon** region.
 
 # Robbery and Theft
 
