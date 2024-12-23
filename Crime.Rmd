@@ -756,7 +756,7 @@ In almost every category of crime studied here, a troubling trend of increasing 
 
 This study has obvious weaknesses:
 
-1. The focus when it comes to trends has been on the **Northeast Avalon,** simply due to the large amount of people who reside there. The trends for each of the individual regions should also be examined.
+1. The **Northeast Avalon** was primarily studied, in terms of trends, due to the region having the largest population out of any in the province. These trends may, or may not, be representative of the other regions of the province, or indeed the province as a whole.
 
 2. This study only considers charges laid with respect to incidents and violations. It does **not** take into consideration the following court proceedings and their outcomes (e.g. whether or not a person is found innocent or guilty of what they are charged of).
 
