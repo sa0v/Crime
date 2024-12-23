@@ -122,6 +122,38 @@ Here we see that the **Northeast Avalon** region leads in terms of assaults agai
 
 There is a weak, **positive** trend in assaults against peace officers in the **Northeast Avalon** region. This appearance may be deceptive, however, particularly in the case of the "peak" during 2010 when assaults against peace officers were apparently the highest. The [metadata](https://opendata.gov.nl.ca/public/opendata/filedownload/?file-id=41) for the data set used in this study notes that, "new legislation in 2009 regarding assaults on peace officers may be the cause of an increase in reported offenses." 
 
+## How many assaults, and of what kind, were committed in the Northeast Avalon region?
+
+Assaults are ranked on a scale. There are three levels:
+
+- level 1,
+- level 2 (involving a weapon or causing bodily harm),
+- level 3 (aggravated).
+
+```{r}
+  data |>
+    filter(geography=="Northeast Avalon, R.N.C.") |>
+    ggplot(aes(year)) +
+    geom_line(aes(y=assault_level_1,color="Assault (Level 1)")) +
+    geom_line(aes(y=assault_level_2_with_weapon_or_causing_bodily_harm,color="Assault (Level 2)")) +
+    geom_line(aes(y=assault_level_3_aggravated,color="Assault (Level 3)")) +
+  scale_x_continuous(breaks=seq(2006,2020,1)) +
+  theme(legend.position="bottom") +
+  labs(
+    title="Total Assaults Against Members of the Public (Level 1-3)",
+    subtitle="Northeast Avalon",
+    x="Year",
+    y="Incidents",
+    caption="Data from Open Data Newfoundland and Labrador",
+    color="Legend"
+  ) +
+  scale_y_log10() +
+  scale_color_colorblind() +
+  scale_fill_colorblind()
+```
+
+Level 1 assaults account for more than any other level in the **Northeast Avalon** region.
+
 # Sex Crimes
 
 ## How do the regions break down in terms of sexual assaults?
@@ -388,7 +420,7 @@ Again, we see that the **Northeast Avalon** region vastly outnumbers its neighbo
 
 In contrast to minor shoplifting incidents, the number of major shoplifting incidents in the **Northeast Avalon** region is clearly **increasing** over time.
 
-## Motor Vehicle Thefts
+## Motor vehicle thefts
 
 For the purposes of studying motor vehicle thefts, only the theft of the vehicle, not the vehicle's cost, will be considered.
 
@@ -427,6 +459,45 @@ The **Northeast Avalon** region experienced the largest total number of motor ve
 ```
 
 It appears that in the **Northeast Avalon** region, the number of total motor vehicle thefts is trending **downward** over time.
+
+## Thefts from motor vehicles
+
+How do the regions rank in terms of thefts from motor vehicles? In the case of thefts under $5,000:
+
+```{r}
+  data |>
+  ggplot(aes(reorder(geography,theft_5_000_or_under_from_a_motor_vehicle),theft_5_000_or_under_from_a_motor_vehicle)) +
+  geom_col(aes(fill="Thefts",color="Thefts")) + 
+  labs(
+    title="Total Motor Vehicle Thefts Under $5,000",
+    x="Region",
+    y="Thefts",
+    caption="Data from Open Data Newfoundland and Labrador",
+  ) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind() +
+  coord_flip()
+```
+In the case of thefts above $5,000:
+
+```{r}
+  data |>
+  ggplot(aes(reorder(geography,theft_over_5_000_from_a_motor_vehicle),theft_over_5_000_from_a_motor_vehicle)) +
+  geom_col(aes(fill="Thefts",color="Thefts")) + 
+  labs(
+    title="Total Motor Vehicle Thefts Over $5,000",
+    x="Region",
+    y="Thefts",
+    caption="Data from Open Data Newfoundland and Labrador",
+  ) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind() +
+  coord_flip()
+```
+
+In both cases, the **Northeast Avalon** region leads in terms of thefts from motor vehicles by a wide margin.
 
 # Firearms and Weapons Offences
 
