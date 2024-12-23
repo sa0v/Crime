@@ -383,6 +383,7 @@ For the purposes of studying motor vehicle thefts, only the theft of the vehicle
   scale_fill_colorblind() +
   coord_flip()
 ```
+
 The **Northeast Avalon** region experienced the largest total number of motor vehicle thefts. What about the general trend over time?
 
 ```{r}
