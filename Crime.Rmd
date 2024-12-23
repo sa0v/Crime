@@ -82,7 +82,7 @@ The **Northeast Avalon** region experienced the largest number of homicides over
 
 There is a **positive** trend in the number of homicides in the Northeast Avalon region.
 
-## Is this a sign of an increase in violent crimes in general for the Northeast Avalon region?
+## Is there a trend in violent crime in general for the Northeast Avalon Region?
 
 We can get a sense for the amount of overall violent crime in the region by counting the number of total violent criminal code violations over time.
 
