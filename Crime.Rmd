@@ -184,7 +184,7 @@ Again, the **Northeast Avalon** leads in terms of sexual assaults (level 2), thi
     theme(legend.position="none")
 ```
 
-The **Labrador District** experienced the greatest number of aggravated sexual assaults (level 3). This is a surprising result. The Northeast Avalon region is projected to be the home of over [half](https://www.cbc.ca/news/canada/newfoundland-labrador/northeast-avalon-home-to-half-the-province-s-population-by-2025-survey-predicts-1.3885504) of the entire population of the province by the year 2025. With a total population of over **200000** at present, the Northeast Avalon is already home to a vast majority of the province's population. Despite this, it is apparent that aggravated sexual assault is most prevalent in the **Labrador District.** In addition to this, it is clear that all forms of sexual assault have a high prevalence in the **Labrador District,** having ranked in the top three in each "degree" or level of sexual assault. This may have implications in terms of allocating resources for sexual assault prevention and victim support.
+The **Labrador District** experienced the greatest number of aggravated sexual assaults (level 3).
 
 ## How are children affected by sex crimes in Newfoundland and Labrador?
 
@@ -627,6 +627,25 @@ In this case, the **Gander-Lewisporte** district is host to the largest number o
     )
 ```
 
+## How do the charges of counterfeiting vary by region?
+
+```{r}
+  data |>
+  ggplot(aes(x=reorder(geography,counterfeiting))) +
+  geom_col(aes(y=counterfeiting,fill="Charges",color="Charges")) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind() +
+  labs(
+    title="Total Charges of Counterfeiting by Region",
+    x="Region",
+    y="Charges",
+    caption="Data from Open Data Newfoundland and Labrador",
+  ) +
+  coord_flip()
+```
+The most charges for counterfeiting were laid in the **Northeast Avalon** region.
+
 # Property Crime
 
 ## How do the total incidents of property crime vary by region?
@@ -668,3 +687,79 @@ The **Northeast Avalon** region leads in terms of total property crime violation
 ```
 
 There does appear to be a **positive** trend in the number of total property crime violations in the **Northeast Avalon** region.
+
+## How do the number of break-ins vary by region?
+
+```{r}
+  data |>
+  ggplot(aes(x=reorder(geography,total_breaking_and_entering))) +
+  geom_col(aes(y=total_breaking_and_entering,fill="Violations",color="Violations")) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind() +
+  labs(
+    title="Total Incidents of Breaking and Entering by Region",
+    x="Region",
+    y="Incidents",
+    caption="Data from Open Data Newfoundland and Labrador",
+  ) +
+  coord_flip()
+```
+
+The vast majority of incidents of breaking and entering occurred in the **Northeast Avalon** region.
+
+## How does the number of incidents of arson vary by region?
+
+```{r}
+  data |>
+  ggplot(aes(x=reorder(geography,arson))) +
+  geom_col(aes(y=arson,fill="Incidents",color="Incidents")) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind() +
+  labs(
+    title="Total Incidents of Arson by Region",
+    x="Region",
+    y="Incidents",
+    caption="Data from Open Data Newfoundland and Labrador",
+  ) +
+  coord_flip()
+```
+
+The greatest number of incidents of arson occurred in the **Northeast Avalon** region.
+
+## How do the total charges of possession of stolen property vary by region?
+
+```{r}
+  data |>
+  ggplot(aes(x=reorder(geography,possession_of_stolen_property))) +
+  geom_col(aes(y=possession_of_stolen_property,fill="Charges",color="Charges")) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind() +
+  labs(
+    title="Total Charges of Posession of Stolen Property by Region",
+    x="Region",
+    y="Charges",
+    caption="Data from Open Data Newfoundland and Labrador",
+  ) +
+  coord_flip()
+```
+
+We can see that the most charges of possession of stolen property were laid in the **Northeast Avalon** region.
+
+# Summary
+
+In almost **every** category of crime studied, whether it be robberies, firearms offences or another category entirely, the dominance of the **Northeast Avalon** region in terms of sheer numbers cannot be ignored. This is perhaps an expected result, however; the Northeast Avalon is home to over [200,000](https://www150.statcan.gc.ca/n1/daily-quotidien/200131/t002c-eng.htm) people, nearly half of the entire population of the province. The remaining regions each comprise a considerably smaller percentage of the population; as such, the prevalence of the **Northeast Avalon** on the preceding plots may simply be a result of the region's high population. The amount of crimes may well be in **proportion** to the rest of the province.
+
+In almost every category of crime studied here, a troubling trend of increasing numbers may be seen. Time and time again, the region which experiences the largest amount of a particular category of crime, also shows an upward trend in the amount of those crimes being committed. There were a few exceptions to this, but it demonstrates that across a wide spectrum of crimes, the **Northeast Avalon** is experiencing a definite increase. Being home to nearly half of the population of Newfoundland and Labrador, this has wide-reaching implications for a large amount of people.
+
+This study has obvious weaknesses:
+
+1. The focus when it comes to trends has been on the **Northeast Avalon,** simply due to the large amount of people who reside there. The trends for each of the individual regions should also be examined.
+
+2. This study only considers charges laid with respect to incidents and violations. It does **not** take into consideration the following court proceedings and their outcomes (e.g. whether or not a person is found innocent or guilty of what they are charged of).
+
+# Conclusion
+
+The **Northeast Avalon** region of Newfoundland and Labrador, being the most populated in the province, is also host to the majority of its crime. Over a 14 year period and a broad spectrum, crime has shown to be increasing in the region over time with few exceptions. This study demonstrates that in terms of sheer numbers, the **Northeast Avalon** region dominates in terms of a wide variety of crimes; not only that, but the amount of those crimes tend to be increasing. This has profound implications for policing in the province; local police forces face the challenge of a rapidly changing "landscape" of crime and must adapt appropriately.
