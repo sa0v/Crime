@@ -703,7 +703,7 @@ The **Northeast Avalon** region dominates in terms of total counts of fraud by a
   coord_flip()
 ```
 
-Identity theft is clearly a prevalent issue in the **Northeast Avalon** region. It is often claimed that this form of crime is on the rise; it would be interesting to see if this is truly the case.
+Identity theft is clearly a prevalent issue in the **Northeast Avalon** region.
 
 ## Is there a trend in the total counts of identity theft in the Northeast Avalon region?
 
@@ -747,7 +747,7 @@ It does indeed appear that incidents of identity theft are **increasing** over t
 
 In this case, the **Gander-Lewisporte** district is host to the largest number of incidents of identity fraud. 
 
-## Are the high numbers of incidents part of a greater trend? 
+## Are the high number of incidents of identity fraud part of a greater trend? 
 
 Note that identity fraud was made a new violation code in January 2010. As such, we will only consider years greater than or equal to 2010 for the purposes of this study.
 
