@@ -579,6 +579,43 @@ Once again, we see that the **Northeast Avalon** ranks first, this time in terms
 
 It is uncertain whether or not the high numbers of total weapons violations in the region amount to a trend.
 
+## How do the total number of charges of weapon possession vary by region?
+
+```{r}
+  data |>
+    ggplot(aes(reorder(geography,possession_of_weapons),possession_of_weapons)) +
+    geom_col(aes(color="Charges",fill="Charges")) +
+    labs(
+      title="Total Weapons Possession Charges by Region",
+      x = "Region",
+      y = "Violations",
+    ) +
+    theme(legend.position="none") +
+    scale_color_colorblind() +
+    scale_fill_colorblind() +
+    coord_flip()
+```
+
+The **Northeast Avalon** region leads in terms of charges for weapons possession. Is this part of a larger trend?
+
+```{r}
+  data |>
+    filter(geography == "Northeast Avalon, R.N.C.") |>
+    ggplot(aes(year,possession_of_weapons)) +
+    geom_line() +
+    geom_smooth(se=FALSE,method="lm") +
+    labs(
+      title="Total Weapons Possession Charges",
+      subtitle="Northeast Avalon",
+      x="Year",
+      y="Charges",
+      caption="Data from Open Data Newfoundland and Labrador",
+    ) + 
+    scale_x_continuous(breaks=seq(2006,2020,1))
+```
+
+There does appear to be a **positive** trend in the number of total weapons possession charges in the **Northeast Avalon** region.
+
 # Criminal Harassment and Threats
 
 ## How do the total number of incidents of criminal harassment vary by region?
