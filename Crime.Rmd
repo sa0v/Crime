@@ -100,7 +100,7 @@ We can get a sense for the overall amount of violent crime in the region by coun
   )
 ```
 
-There is a **positive** trend in the number of total violent criminal code violations for the region. This does seem to support the notion that violent crime has, in general, increased for the Northeast Avalon region over time.
+There is a **positive** trend in the number of total violent criminal code violations for the region. This does seem to support the notion that violent crime has, in general, increased in the Northeast Avalon region over time.
 
 ## How do the various regions rank in terms of total violent criminal code violations?
 
