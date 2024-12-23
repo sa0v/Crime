@@ -84,7 +84,7 @@ There is a **positive** trend in the number of homicides in the Northeast Avalon
 
 ## Is there a trend in violent crime in general for the Northeast Avalon Region?
 
-We can get a sense for the amount of overall violent crime in the region by counting the number of total violent criminal code violations over time.
+We can get a sense for the overall amount of violent crime in the region by counting the number of total violent criminal code violations.
 
 ```{r}
   data |>
