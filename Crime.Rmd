@@ -147,6 +147,7 @@ Here we see that the **Northeast Avalon** region leads in terms of assaults agai
 ## How do the regions break down in terms of sexual assaults?
 
 Sexual assaults are "ranked" in three levels:
+
 - level 1,
 - level 2 (committed with a weapon or causing bodily harm),
 - level 3 (aggravated).
