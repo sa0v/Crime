@@ -107,7 +107,6 @@ Here we see that the **Northeast Avalon** region leads in terms of assaults agai
 ```{r}
   data |>
   filter(geography=="Northeast Avalon, R.N.C.") |>
-  filter(year >= 2009) |>
   ggplot(aes(year,assault_peace_officer)) +
   geom_line() +
   geom_smooth(se=FALSE,method="lm") +
@@ -116,11 +115,10 @@ Here we see that the **Northeast Avalon** region leads in terms of assaults agai
     x="Year",
     y="Total Assaults",
     caption="Data from Open Data Newfoundland and Labrador",
-    subtitle="(2009-2020)"
-  )
+  ) 
 ```
 
-There is a weak, **negative** trend in assaults against peace officers in the Northeast Avalon region. This appearance may be deceptive, however, particularly in the case of the "peak" during 2010 when assaults against peace officers were apparently the highest. The [metadata](https://opendata.gov.nl.ca/public/opendata/filedownload/?file-id=41) for the data set used in this study notes that, "new legislation in 2009 regarding assaults on peace officers may be the cause of an increase in reported offenses." The metadata urges caution when comparing data from previous years, so for the purposes of this plot, years previous to 2009 (when the legislation changes were introduced) are excluded.
+There is a weak, **positive** trend in assaults against peace officers in the Northeast Avalon region. This appearance may be deceptive, however, particularly in the case of the "peak" during 2010 when assaults against peace officers were apparently the highest. The [metadata](https://opendata.gov.nl.ca/public/opendata/filedownload/?file-id=41) for the data set used in this study notes that, "new legislation in 2009 regarding assaults on peace officers may be the cause of an increase in reported offenses." 
 
 # Sex Crimes
 
@@ -184,7 +182,7 @@ Again, the **Northeast Avalon** leads in terms of sexual assaults, this time inv
     theme(legend.position="none")
 ```
 
-The **Labrador District** experienced the greatest number of aggravated sexual assaults (level 3).
+The **Labrador District** experienced the greatest number of aggravated sexual assaults (level 3). This is something of a surprising result. The Northeast Avalon region is projected to be the home of over [half](https://www.cbc.ca/news/canada/newfoundland-labrador/northeast-avalon-home-to-half-the-province-s-population-by-2025-survey-predicts-1.3885504) of the entire population of the province by the year 2025. With a total population of over **200000** at present, the Northeast Avalon is already home to a vast majority of the province's population. Despite this, it is apparent that aggravated sexual assault is most prevalent in the **Labrador District.** This may have implications in terms of allocating resources for sexual assault prevention and victim support.
 
 ## How are children affected by sex crimes in Newfoundland and Labrador?
 
