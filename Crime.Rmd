@@ -784,6 +784,7 @@ Note that identity fraud was made a new violation code in January 2010. As such,
   ) +
   coord_flip()
 ```
+
 The most charges for counterfeiting were laid in the **Northeast Avalon** region.
 
 # Property Crime
