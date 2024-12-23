@@ -82,46 +82,6 @@ The **Northeast Avalon** region experienced the largest number of homicides over
 
 There is a **positive** trend in the number of homicides in the Northeast Avalon region.
 
-## Is there a trend in violent crime in general for the Northeast Avalon Region?
-
-We can get a sense for the overall amount of violent crime in the region by counting the number of total violent criminal code violations.
-
-```{r}
-  data |>
-  filter(geography=="Northeast Avalon, R.N.C.") |>
-  ggplot(aes(year,total_violent_criminal_code_violations)) +
-  geom_line() +
-  geom_smooth(se=FALSE,method="lm") +
-  labs(
-    title="Total Violent Crimes in Northeast Avalon Region Over Time",
-    x="Year",
-    y="Total Violent Criminal Code Violations",
-    caption="Data from Open Data Newfoundland and Labrador",
-  )
-```
-
-There is a **positive** trend in the number of total violent criminal code violations for the region. This does seem to support the notion that violent crime has, in general, increased in the Northeast Avalon region over time.
-
-## How do the various regions rank in terms of total violent criminal code violations?
-
-```{r}
-data |>
-  ggplot(aes(reorder(geography,total_violent_criminal_code_violations),total_violent_criminal_code_violations)) +
-  geom_col(aes(color="Violations",fill="Violations")) +
-  labs(
-    title="Total Violent Criminal Code Violations by Region",
-    x="Region",
-    y="Total Violent Criminal Code Violations",
-    caption="Data from Open Data Newfoundland and Labrador",
-  ) +
-  theme(legend.position="none") +
-  scale_color_colorblind() +
-  scale_fill_colorblind() +
-  coord_flip()
-```
-
-The **Northeast Avalon** region leads in terms of total violent criminal code violations.
-
 ## Which region leads in assaults against peace officers?
 
 ```{r}
@@ -141,6 +101,26 @@ data |>
 ```
 
 Here we see that the **Northeast Avalon** region leads in terms of assaults against peace officers. This certainly fits with the general trend of increasing violent crime within the region. It is concerning, however, to note the number of incidents in which even officers of the law became the victims of violent crimes.
+
+## Is there a trend in the number of assaults against peace officers for the Northeast Avalon region?
+
+```{r}
+  data |>
+  filter(geography=="Northeast Avalon, R.N.C.") |>
+  filter(year >= 2009) |>
+  ggplot(aes(year,assault_peace_officer)) +
+  geom_line() +
+  geom_smooth(se=FALSE,method="lm") +
+  labs(
+    title="Total Assaults Against Peace Officers in Northeast Avalon Region Over Time",
+    x="Year",
+    y="Total Assaults",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="(2009-2020)"
+  )
+```
+
+There is a weak, **negative** trend in assaults against peace officers in the Northeast Avalon region. This appearance may be deceptive, however, particularly in the case of the "peak" during 2010 when assaults against peace officers were apparently the highest. The [metadata](https://opendata.gov.nl.ca/public/opendata/filedownload/?file-id=41) for the data set used in this study notes that, "new legislation in 2009 regarding assaults on peace officers may be the cause of an increase in reported offenses." The metadata urges caution when comparing data from previous years, so for the purposes of this plot, years previous to 2009 (when the legislation changes were introduced) are excluded.
 
 # Sex Crimes
 
