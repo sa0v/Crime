@@ -786,7 +786,7 @@ In the case of the **Northeast Avalon** region, breaking and entering is by far 
 
 # Summary
 
-In almost **every** category of crime studied, whether it be robberies, firearms offences or another category entirely, the dominance of the **Northeast Avalon** region in terms of sheer numbers cannot be ignored. This is perhaps an expected result, however; the **Northeast Avalon** is home to over [200,000](https://www150.statcan.gc.ca/n1/daily-quotidien/200131/t002c-eng.htm) people, nearly half of the entire population of the province. The remaining regions each comprise a considerably smaller percentage of the population; as such, the prevalence of the **Northeast Avalon** on the preceding plots may simply be a result of the region's high population. 
+In almost **every** category of crime studied, whether it be robberies, firearms offences or others, the dominance of the **Northeast Avalon** region in terms of sheer numbers cannot be ignored. This is perhaps an expected result, however; the **Northeast Avalon** is home to over [200,000](https://www150.statcan.gc.ca/n1/daily-quotidien/200131/t002c-eng.htm) people, nearly half of the entire population of the province. The remaining regions each comprise a considerably smaller percentage of the population; as such, the prevalence of the **Northeast Avalon** on the preceding plots may simply be a result of the region's high population. 
 
 The fact remains that the **Northeast Avalon** region dominates in terms of sheer numbers, when it comes to a broad spectrum and variety of crimes committed. In almost every case, the region shows an upward trend in the type of crime under study.
 
