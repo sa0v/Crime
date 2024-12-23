@@ -142,3 +142,125 @@ data |>
 
 Here we see that the **Northeast Avalon** region leads in terms of assaults against peace officers. This certainly fits with the general trend of increasing violent crime within the region. It is concerning, however, to note the number of incidents in which even officers of the law became the victims of violent crimes.
 
+# Sex Crimes
+
+## How do the regions break down in terms of sexual assaults?
+
+Sexual assaults are "ranked" in three levels:
+- level 1,
+- level 2 (committed with a weapon or causing bodily harm),
+- level 3 (aggravated).
+
+```{r}
+  data |>
+    ggplot(aes(reorder(geography,sexual_assault_level_1),sexual_assault_level_1)) +
+    geom_col(aes(fill="Assaults",color="Assaults")) +
+    labs(
+      title="Sexual Assaults (Level 1) by Region",
+      x = "Sexual Assaults (Level 1)",
+      y = "Region",
+      caption = "Data from Open Data Newfoundland and Labrador"
+    ) +
+    coord_flip() +
+    scale_color_colorblind() +
+    scale_fill_colorblind() +
+    theme(legend.position="none")
+```
+
+The **Northeast Avalon** region ranks first in terms of total number of sexual assaults (level 1).
+
+```{r}
+  data |>
+    ggplot(aes(reorder(geography,sexual_assault_level_2_with_a_weapon_or_bodily_harm),sexual_assault_level_2_with_a_weapon_or_bodily_harm)) +
+    geom_col(aes(fill="Assaults",color="Assaults"))+
+    labs(
+      title="Sexual Assaults (Level 2) by Region",
+      x = "Sexual Assaults (Level 2)",
+      y = "Region",
+      caption = "Data from Open Data Newfoundland and Labrador"
+    ) +
+    coord_flip() +
+    scale_color_colorblind() +
+    scale_fill_colorblind() +
+    theme(legend.position="none")
+```
+
+Again, the **Northeast Avalon** leads in terms of sexual assaults, this time involving a weapon or bodily harm.
+
+```{r}
+  data |>
+    ggplot(aes(reorder(geography,sexual_assault_level_3_aggravated),sexual_assault_level_3_aggravated)) +
+    geom_col(aes(fill="Assaults",color="Assaults")) +
+    labs(
+      title="Sexual Assaults (Level 3) by Region",
+      x = "Sexual Assaults (Level 3)",
+      y = "Region",
+      caption = "Data from Open Data Newfoundland and Labrador"
+    ) +
+    coord_flip() +
+    scale_color_colorblind() +
+    scale_fill_colorblind() +
+    theme(legend.position="none")
+```
+
+The **Labrador District** experienced the greatest number of aggravated sexual assaults (level 3).
+
+## How are children affected by sex crimes in Newfoundland and Labrador?
+
+```{r}
+  data |>
+    ggplot(aes(reorder(geography,total_sexual_violations_against_children),total_sexual_violations_against_children)) +
+    geom_col(aes(fill="Violations",color="Violations")) +
+    labs(
+      title="Total Sexual Violations Against Children by Region",
+      x = "Sexual Violations",
+      y = "Region",
+      caption = "Data from Open Data Newfoundland and Labrador"
+    ) +
+    coord_flip() +
+    scale_color_colorblind() +
+    scale_fill_colorblind() +
+    theme(legend.position="none")
+```
+
+The **Northeast Avalon** district experienced the most total sexual violations against children.
+
+In addition, there are incidences of child luring via computer to be considered.
+
+```{r}
+  data |>
+    ggplot(aes(reorder(geography,luring_a_child_via_a_computer),luring_a_child_via_a_computer)) +
+    geom_col(aes(fill="Incidents",color="Incidents")) +
+    labs(
+      title="Total Incidents of Child Luring via Computer by Region",
+      x = "Incidents",
+      y = "Region",
+      caption = "Data from Open Data Newfoundland and Labrador"
+    ) +
+    coord_flip() +
+    scale_color_colorblind() +
+    scale_fill_colorblind() +
+    theme(legend.position="none")
+```
+
+Here it is apparent that the **Northeast Avalon** region leads by a wide margin in terms of child luring incidents via computer.
+
+## Is there a trend in sexual violations against children in the Northeast Avalon region?
+
+```{r}
+  data |>
+    filter(geography=="Northeast Avalon, R.N.C.") |>
+    ggplot(aes(year,total_sexual_violations_against_children)) +
+    geom_line() +
+    geom_smooth(se=FALSE,method="lm") +
+    labs(
+      title="Total Sexual Violations Against Children",
+      subtitle="Northeast Avalon Region",
+      x="Year",
+      y="Sexual Violations",
+      caption="Data from Open Data Newfoundland and Labrador",
+    )
+```
+
+There is a clear, **positive** trend in the number of sexual violations against children, with respect to the Northeast Avalon region.
+
