@@ -469,7 +469,7 @@ How do the regions rank in terms of thefts from motor vehicles? In the case of t
   ggplot(aes(reorder(geography,theft_5_000_or_under_from_a_motor_vehicle),theft_5_000_or_under_from_a_motor_vehicle)) +
   geom_col(aes(fill="Thefts",color="Thefts")) + 
   labs(
-    title="Total Motor Vehicle Thefts Under $5,000",
+    title="Total Thefts From Motor Vehicles (Under $5,000)",
     x="Region",
     y="Thefts",
     caption="Data from Open Data Newfoundland and Labrador",
@@ -479,6 +479,7 @@ How do the regions rank in terms of thefts from motor vehicles? In the case of t
   scale_fill_colorblind() +
   coord_flip()
 ```
+
 In the case of thefts above $5,000:
 
 ```{r}
@@ -486,7 +487,7 @@ In the case of thefts above $5,000:
   ggplot(aes(reorder(geography,theft_over_5_000_from_a_motor_vehicle),theft_over_5_000_from_a_motor_vehicle)) +
   geom_col(aes(fill="Thefts",color="Thefts")) + 
   labs(
-    title="Total Motor Vehicle Thefts Over $5,000",
+    title="Total Thefts From Motor Vehicles (Over $5,000)",
     x="Region",
     y="Thefts",
     caption="Data from Open Data Newfoundland and Labrador",
@@ -839,7 +840,6 @@ There does appear to be a **positive** trend in the number of total property cri
     geom_line(aes(y=possession_of_stolen_property,color="Possession of Stolen Property")) +
     geom_line(aes(y=arson,color="Arson")) +
     geom_line(aes(y=trespass_at_night,color="Tresspass at Night")) +
-    geom_line(aes(y=proceeds_of_crime,color="Proceeds of Crime")) +
   scale_x_continuous(breaks=seq(2006,2020,1)) +
   scale_y_log10() +
   theme(legend.position="bottom") +
