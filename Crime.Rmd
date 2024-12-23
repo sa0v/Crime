@@ -767,6 +767,7 @@ There does appear to be a **positive** trend in the number of total property cri
     geom_line(aes(y=possession_of_stolen_property,color="Possession of Stolen Property")) +
     geom_line(aes(y=arson,color="Arson")) +
     geom_line(aes(y=trespass_at_night,color="Tresspass at Night")) +
+    geom_line(aes(y=proceeds_of_crime,color="Proceeds of Crime")) +
   scale_x_continuous(breaks=seq(2006,2020,1)) +
   scale_y_log10() +
   theme(legend.position="bottom") +
@@ -774,10 +775,11 @@ There does appear to be a **positive** trend in the number of total property cri
     title="Property Crimes by Type",
     subtitle="Northeast Avalon",
     x="Year",
-    y="Incidents",
+    y="Charges",
     caption="Data from Open Data Newfoundland and Labrador",
-    color="Legend"
+    color="Legend",
   ) +
+  guides(color=guide_legend(nrow=2, byrow=TRUE)) +
   scale_color_colorblind() +
   scale_fill_colorblind()
 ```
