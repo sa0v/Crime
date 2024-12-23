@@ -122,7 +122,7 @@ Here we see that the **Northeast Avalon** region leads in terms of assaults agai
 
 There is a weak, **positive** trend in assaults against peace officers in the **Northeast Avalon** region. This appearance may be deceptive, however, particularly in the case of the "peak" during 2010 when assaults against peace officers were apparently the highest. The [metadata](https://opendata.gov.nl.ca/public/opendata/filedownload/?file-id=41) for the data set used in this study notes that, "new legislation in 2009 regarding assaults on peace officers may be the cause of an increase in reported offenses." 
 
-## How many assaults, and of what kind, were committed in the Northeast Avalon region?
+## How many assaults, and of what kind, were committed against members of the public in the Northeast Avalon region?
 
 Assaults are ranked on a scale. There are three levels:
 
