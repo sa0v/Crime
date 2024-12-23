@@ -1,0 +1,144 @@
+---
+title: "Crime in Newfoundland and Labrador (2006-2020)"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+  library(tidyverse)
+  library(janitor)
+  library(ggthemes)
+
+  data <- read.csv("https://opendata.gov.nl.ca/public/opendata/filedownload/?file-id=17253")
+
+  data <- data|>
+    janitor::clean_names() |>
+    mutate(geography=factor(geography)) |>
+    # Focus upon actual incidents of crime.
+    filter(data_type=="actual_incidents") |>
+    # We will restrict our area of study to the police regions of Newfoundland
+    # and Labrador.
+    filter(
+      geography != "Yukon",
+      geography != "Saskatchewan",
+      geography != "Quebec",
+      geography != "Prince Edward Island",
+      geography != "Ontario",
+      geography != "Nunavut",
+      geography != "Northwest Territories",
+      geography != "New Brunswick",
+      geography != "Manitoba",
+      geography != "Canada",
+      geography != "British Columbia",
+      geography != "Alberta",
+      geography != "Nova Scotia",
+      geography != "Newfoundland and Labrador",
+    ) |>
+    select(!c('geography_type','geography_note','data_type')) |>
+    mutate(geography = str_replace(geography,"Northeast Avalon R.N.C","Northeast Avalon, R.N.C."))
+```
+
+This [RStudio](https://resources.rstudio.com/categories/rstudio-ide/) notebook studies crime in Newfoundland and Labrador over a 14 year period, using a data set made available by **Open Data Newfoundland and Labrador** on their website.
+
+# Violent Crime
+
+## Which region experienced the largest number of homicides between 2006-2020?
+
+```{r}
+  data |>
+    ggplot(aes(reorder(geography,homicide), homicide)) +
+    geom_col(aes(fill="Homicides",color="Homicides")) +
+    labs(
+      title="Homicides by Region",
+      x="Region",
+      y="Total Homicides",
+      subtitle="(2006-2020)",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) +
+    coord_flip() +
+    theme(legend.position = "none") +
+    scale_color_colorblind() +
+    scale_fill_colorblind()
+```
+
+The **Northeast Avalon** region experienced the largest number of homicides over a 14-year period.
+
+## How did the total number of homicides in the Northeast Avalon region vary over time?
+
+```{r}
+  data |>
+  filter(geography=="Northeast Avalon, R.N.C.") |>
+  ggplot(aes(year,homicide)) +
+  geom_line() +
+  geom_smooth(se=FALSE,method="lm") +
+  labs(
+    title="Total Homicides in Northeast Avalon Region Over Time",
+    x="Year",
+    y="Total Homicides",
+    caption="Data from Open Data Newfoundland and Labrador",
+  )
+```
+
+There is a **positive** trend in the number of homicides in the Northeast Avalon region.
+
+## Is this a sign of an increase in violent crimes in general for the Northeast Avalon region?
+
+We can get a sense for the amount of overall violent crime in the region by counting the number of total violent criminal code violations over time.
+
+```{r}
+  data |>
+  filter(geography=="Northeast Avalon, R.N.C.") |>
+  ggplot(aes(year,total_violent_criminal_code_violations)) +
+  geom_line() +
+  geom_smooth(se=FALSE,method="lm") +
+  labs(
+    title="Total Violent Crimes in Northeast Avalon Region Over Time",
+    x="Year",
+    y="Total Violent Criminal Code Violations",
+    caption="Data from Open Data Newfoundland and Labrador",
+  )
+```
+
+There is a **positive** trend in the number of total violent criminal code violations for the region. This does seem to support the notion that violent crime has, in general, increased for the Northeast Avalon region over time.
+
+## How do the various regions rank in terms of total violent criminal code violations?
+
+```{r}
+data |>
+  ggplot(aes(reorder(geography,total_violent_criminal_code_violations),total_violent_criminal_code_violations)) +
+  geom_col(aes(color="Violations",fill="Violations")) +
+  labs(
+    title="Total Violent Criminal Code Violations by Region",
+    x="Region",
+    y="Total Violent Criminal Code Violations",
+    caption="Data from Open Data Newfoundland and Labrador",
+  ) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind() +
+  coord_flip()
+```
+
+The **Northeast Avalon** region leads in terms of total violent criminal code violations.
+
+## Which region leads in assaults against peace officers?
+
+```{r}
+data |>
+  ggplot(aes(reorder(geography,assault_peace_officer),assault_peace_officer)) +
+  geom_col(aes(color="Assaults",fill="Assaults")) +
+  coord_flip() +
+  labs(
+    title="Total Assaults Against Peace Officers by Region",
+    x="Region",
+    y="Total Assaults Against Peace Officers",
+    caption="Data from Open Data Newfoundland and Labrador",
+  ) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind()
+```
+
+Here we see that the **Northeast Avalon** region leads in terms of assaults against peace officers. This certainly fits with the general trend of increasing violent crime within the region. It is concerning, however, to note the number of incidents in which even officers of the law became the victims of violent crimes.
+
