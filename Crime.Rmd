@@ -965,6 +965,46 @@ The **Northeast Avalon** region vastly outstrips its neighbors in terms of break
 
 In this case, there is a clear, **downward** trend in the number of breaking and entering charges laid across the province.
 
+## How do incidents of arson vary by region?
+
+```{r}
+  data |>
+  ggplot(aes(x=reorder(geography,arson))) +
+  geom_col(aes(y=arson,fill="Violations",color="Violations")) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind() +
+  labs(
+    title="Total Incidents of Arson by Region",
+    x="Region",
+    y="Incidents",
+    caption="Data from Open Data Newfoundland and Labrador",
+  ) +
+  coord_flip()
+```
+
+We see that the **Northeast Avalon** region leads in total incidents of arson.
+
+## Is there a trend in the number of arson incidents across the province?
+
+```{r}
+  data |>
+    group_by(year) |>
+    summarize(arson=sum(arson)) |>
+    ggplot(aes(year,arson)) +
+    geom_line() +
+    geom_smooth(se=FALSE,method="lm") +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Incidents of Arson",
+      x = "Year",
+      y = "Incidents",
+      caption="Data from Open Data Newfoundland and Labrador"
+    )
+```
+
+The number of incidents of arson is clearly trending **downward** across the province.
+
 # On the Road
 
 ## How do the incidents of impaired driving vary by region?
