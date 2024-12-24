@@ -1008,7 +1008,7 @@ The fact remains that the **Northeast Avalon** region dominates in terms of shee
 
 This study has obvious weaknesses:
 
-1. The trends in crime for the **Northeast Avalon** were investigated due to the sheer number and volume of crimes committed in the region. They may or may not be representative of the trends for the other regions, or the province as a whole.
+1. The trends in crime for the **Northeast Avalon** may or may not be representative of the trends for the other regions, or the province as a whole.
 
 2. This study only considers charges laid with respect to incidents and violations. It does **not** take into consideration the following court proceedings and their outcomes (e.g. whether or not a person is found innocent or guilty of what they are charged of).
 
