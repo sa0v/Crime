@@ -62,7 +62,7 @@ This [RStudio](https://resources.rstudio.com/categories/rstudio-ide/) notebook s
     scale_fill_colorblind()
 ```
 
-The **Northeast Avalon** region experienced the largest number of homicides over a 14-year period.
+The **Northeast Avalon** region experienced the largest number of homicides.
 
 ## How did the total number of homicides in Newfoundland and Labrador vary over time?
 
@@ -610,7 +610,7 @@ Once again, we see that the **Northeast Avalon** ranks first, this time in terms
     )
 ```
 
-In this case it is clear that the number of weapons possession charges laid across the province is **rising** over time.
+In this case, it is clear that the number of total weapons violations across the province is **rising** over time.
 
 ## How do the total number of charges of weapon possession vary by region?
 
