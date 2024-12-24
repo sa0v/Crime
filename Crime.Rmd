@@ -302,6 +302,26 @@ There is a clear, **positive** trend in the number of sexual violations against 
 
 In this case the **Northeast Avalon** region outnumbers all others in terms of charges laid for prostitution.
 
+## How do the incidents of indecent acts vary by region?
+
+```{r}
+  data |>
+    ggplot(aes(reorder(geography,indecent_acts),indecent_acts)) +
+    geom_col(aes(fill="Incidents",color="Incidents")) +
+    labs(
+      title="Total Incidents of Indecent Acts by Region",
+      x = "Incidents",
+      y = "Region",
+      caption = "Data from Open Data Newfoundland and Labrador"
+    ) +
+    coord_flip() +
+    scale_color_colorblind() +
+    scale_fill_colorblind() +
+    theme(legend.position="none")
+```
+
+The majority of the indecent acts in the province were committed in the **Northeast Avalon** region.
+
 # Robbery and Theft
 
 ## How did the number of robberies rank across the different regions over time?
@@ -868,6 +888,112 @@ The **Northeast Avalon** region leads in terms of total property crime violation
 ```
 
 There does appear to be a **positive** trend in the number of total property crime violations in the **Northeast Avalon** region.
+
+# On the Road
+
+## How do the incidents of impaired driving vary by region?
+
+```{r}
+  data |>
+  ggplot(aes(x=reorder(geography,total_impaired_driving))) +
+  geom_col(aes(y=total_impaired_driving,fill="Violations",color="Violations")) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind() +
+  labs(
+    title="Total Impaired Driving Charges by Region",
+    x="Region",
+    y="Charges",
+    caption="Data from Open Data Newfoundland and Labrador",
+  ) +
+  coord_flip()
+```
+
+The **Northeast Avalon** leads in terms of total impaired driving charges.
+
+## Is this part of a trend for the region?
+
+```{r}
+  data |>
+    filter(geography == "Northeast Avalon, R.N.C.") |>
+    ggplot(aes(year,total_impaired_driving)) +
+    geom_line() +
+    geom_smooth(se=FALSE,method="lm") +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Impaired Driving Charges",
+      subtitle="Northeast Avalon",
+      x = "Year",
+      y = "Charges",
+      caption="Data from Open Data Newfoundland and Labrador"
+    )
+```
+
+The data reveals a weak, **negative** relationship; impaired driving charges in the region are slowly decreasing over time.
+
+## In the case of the Northeast Avalon, how many impaired driving incidents resulted in bodily harm or deaths?
+
+```{r}
+  data |>
+    filter(geography=="Northeast Avalon, R.N.C.") |>
+    ggplot(aes(year)) +
+    geom_line(aes(y=impaired_operation_causing_bodily_harm,color="Bodily Harm")) +
+    geom_line(aes(y=impaired_operation_causing_death,color="Death")) +
+  scale_x_continuous(breaks=seq(2006,2020,1)) +
+  theme(legend.position="bottom") +
+  labs(
+    title="Impaired Driving Charges",
+    subtitle="Northeast Avalon",
+    x="Year",
+    y="Charges",
+    caption="Data from Open Data Newfoundland and Labrador",
+    color="Legend"
+  ) +
+  scale_color_colorblind() +
+  scale_fill_colorblind()
+```
+
+In the case of the **Northeast Avalon** region, impaired driving charges are fortunately responsible for a very small number of injuries and fatalities.
+
+## How does the number of prohibited drivers on the road vary by region?
+
+```{r}
+  data |>
+  ggplot(aes(x=reorder(geography,driving_while_prohibited))) +
+  geom_col(aes(y=driving_while_prohibited,fill="Violations",color="Violations")) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind() +
+  labs(
+    title="Total Prohibited Driver Charges by Region",
+    x="Region",
+    y="Drivers",
+    caption="Data from Open Data Newfoundland and Labrador",
+  ) +
+  coord_flip()
+```
+
+The **Northeast Avalon** leads in terms of drivers who are arrested while driving, when they are already prohibited from doing so.
+
+## Is this part of a trend for the region?
+
+```{r}
+  data |>
+    filter(geography == "Northeast Avalon, R.N.C.") |>
+    ggplot(aes(year,driving_while_prohibited)) +
+    geom_line() +
+    geom_smooth(se=FALSE,method="lm") +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Driving While Prohibited Charges",
+      subtitle="Northeast Avalon",
+      x = "Year",
+      y = "Charges",
+      caption="Data from Open Data Newfoundland and Labrador"
+    )
+```
+
+It would appear that in the case of the **Northeast Avalon** region, the number of prohibited drivers on the road is **increasing** with time.
 
 # Summary
 
