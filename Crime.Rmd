@@ -50,9 +50,9 @@ This [RStudio](https://resources.rstudio.com/categories/rstudio-ide/) notebook s
     ggplot(aes(reorder(geography,homicide), homicide)) +
     geom_col(aes(fill="Homicides",color="Homicides")) +
     labs(
-      title="Homicides by Region",
+      title="Total Homicides by Region",
       x="Region",
-      y="Total Homicides",
+      y="Homicides",
       subtitle="(2006-2020)",
       caption="Data from Open Data Newfoundland and Labrador"
     ) +
@@ -94,7 +94,7 @@ data |>
   labs(
     title="Total Assaults Against Peace Officers by Region",
     x="Region",
-    y="Total Assaults Against Peace Officers",
+    y="Assaults Against Peace Officers",
     caption="Data from Open Data Newfoundland and Labrador",
   ) +
   theme(legend.position="none") +
@@ -145,7 +145,7 @@ Assaults are ranked on a scale. There are three levels:
     title="Total Assaults Against Members of the Public (Level 1-3)",
     subtitle="Northeast Avalon",
     x="Year",
-    y="Incidents",
+    y="Assaults",
     caption="Data from Open Data Newfoundland and Labrador",
     color="Legend"
   ) +
@@ -172,8 +172,8 @@ Sexual assaults are "ranked" by three levels:
     geom_col(aes(fill="Assaults",color="Assaults")) +
     labs(
       title="Sexual Assaults (Level 1) by Region",
-      x = "Sexual Assaults (Level 1)",
-      y = "Region",
+      x = "Region",
+      y = "Sexual Assaults",
       caption = "Data from Open Data Newfoundland and Labrador"
     ) +
     coord_flip() +
@@ -190,8 +190,8 @@ The **Northeast Avalon** region ranks first in terms of total number of sexual a
     geom_col(aes(fill="Assaults",color="Assaults"))+
     labs(
       title="Sexual Assaults (Level 2) by Region",
-      x = "Sexual Assaults (Level 2)",
-      y = "Region",
+      x = "Region",
+      y = "Sexual Assaults",
       caption = "Data from Open Data Newfoundland and Labrador"
     ) +
     coord_flip() +
@@ -208,8 +208,8 @@ Again, the **Northeast Avalon** leads in terms of sexual assaults (level 2), thi
     geom_col(aes(fill="Assaults",color="Assaults")) +
     labs(
       title="Sexual Assaults (Level 3) by Region",
-      x = "Sexual Assaults (Level 3)",
-      y = "Region",
+      x = "Region",
+      y = "Sexual Assaults",
       caption = "Data from Open Data Newfoundland and Labrador"
     ) +
     coord_flip() +
@@ -228,8 +228,8 @@ The **Labrador District** experienced the greatest number of aggravated sexual a
     geom_col(aes(fill="Violations",color="Violations")) +
     labs(
       title="Total Sexual Violations Against Children by Region",
-      x = "Sexual Violations",
-      y = "Region",
+      x = "Region",
+      y = "Sexual Violations",
       caption = "Data from Open Data Newfoundland and Labrador"
     ) +
     coord_flip() +
@@ -294,8 +294,8 @@ There is a clear, **positive** trend in the number of sexual violations against 
     geom_col(aes(fill="Charges",color="Charges")) +
     labs(
       title="Total Charges of Prostitution by Region",
-      x = "Charges",
-      y = "Region",
+      x = "Region",
+      y = "Charges",
       caption = "Data from Open Data Newfoundland and Labrador"
     ) +
     coord_flip() +
@@ -314,8 +314,8 @@ In this case the **Northeast Avalon** region outnumbers all others in terms of c
     geom_col(aes(fill="Incidents",color="Incidents")) +
     labs(
       title="Total Incidents of Indecent Acts by Region",
-      x = "Incidents",
-      y = "Region",
+      x = "Region",
+      y = "Incidents",
       caption = "Data from Open Data Newfoundland and Labrador"
     ) +
     coord_flip() +
@@ -621,7 +621,7 @@ In this case, it is clear that the number of total weapons violations across the
     labs(
       title="Total Weapons Possession Charges by Region",
       x = "Region",
-      y = "Violations",
+      y = "Charges",
     ) +
     theme(legend.position="none") +
     scale_color_colorblind() +
@@ -713,7 +713,7 @@ The **Northeast Avalon** region dominates in terms of incidents of uttering thre
   ) +
   coord_flip()
 ```
-Once again, the **Northeast Avalon** dominates in terms of total incidents, this time with respect to threatening or harassing phone calls.
+Once again, the **Northeast Avalon** dominates in terms of total incidents, this time with respect to harassing or threatening phone calls.
 
 ## How have the total incidents of criminal harassment varied over time across the province?
 
@@ -757,7 +757,7 @@ Clearly, there has been a **positive** trend in the number of threatening or har
 
 Once again, the **Northeast Avalon** region ranks first, this time in incidents of extortion.
 
-## How do the regions vary in terms of total counts of fraud?
+## How do the regions vary in terms of total incidents of fraud?
 
 ```{r}
   data |>
@@ -1070,7 +1070,7 @@ The **Northeast Avalon** is the leader in terms of arrests for cannabis possessi
     labs(
       title="Total Arrests for Cannabis Possession",
       x = "Year",
-      y = "Charges",
+      y = "Arrests",
       caption="Data from Open Data Newfoundland and Labrador"
     )
 ```
@@ -1110,7 +1110,7 @@ The **Northeast Avalon** region ranks first in terms of arrests for cocaine poss
     labs(
       title="Total Arrests for Cocaine Possession",
       x = "Year",
-      y = "Charges",
+      y = "Arrests",
       caption="Data from Open Data Newfoundland and Labrador"
     )
 ```
@@ -1128,9 +1128,9 @@ There is a clear, upward trend in the number of arrests for cocaine possession o
       total_other_controlled_drugs_and_substances_act_drugs_trafficking_production_or_distribution=sum(total_other_controlled_drugs_and_substances_act_drugs_trafficking_production_or_distribution)
       ) |>
     ggplot(aes(year)) +
-    geom_line(aes(y=total_cannabis_trafficking_production_or_distribution,color="Total Cannabis")) +
-    geom_line(aes(y=total_cocaine_trafficking_production_or_distribution,color="Total Cocaine")) +
-    geom_line(aes(y=total_other_controlled_drugs_and_substances_act_drugs_trafficking_production_or_distribution,color="Total Other Controlled Drugs and Substances")) +
+    geom_line(aes(y=total_cannabis_trafficking_production_or_distribution,color="Total cannabis")) +
+    geom_line(aes(y=total_cocaine_trafficking_production_or_distribution,color="Total cocaine")) +
+    geom_line(aes(y=total_other_controlled_drugs_and_substances_act_drugs_trafficking_production_or_distribution,color="Total other controlled drugs and substances")) +
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Distribution, Production and Trafficking by Type",
