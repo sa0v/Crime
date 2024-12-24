@@ -156,7 +156,7 @@ Level 1 assaults account for more than any other level in the **Northeast Avalon
 
 # Sex Crimes
 
-## How do the regions break down in terms of sexual assaults?
+## How do the regions vary in terms of sexual assaults?
 
 Sexual assaults are "ranked" by three levels:
 
@@ -364,7 +364,7 @@ We see in this case that the **Northeast Avalon** experienced the most robberies
 
 There has been a clear, **positive** trend in the number of robberies over time in the **Northeast Avalon** region.
 
-## How did the various regions break down in terms of shoplifting incidents?
+## How did the various regions vary in terms of shoplifting incidents?
 
 ```{r}
   data |>
