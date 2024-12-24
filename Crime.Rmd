@@ -1035,6 +1035,118 @@ The **Northeast Avalon** leads in terms of drivers who are arrested while drivin
 
 It would appear that the number of prohibited drivers on the road is **increasing** with time.
 
+# Drugs and Controlled Substances
+
+## How do the arrests for cannabis possession vary across regions?
+
+```{r}
+  data |>
+  ggplot(aes(x=reorder(geography,posession_cannabis))) +
+  geom_col(aes(y=posession_cannabis,fill="Violations",color="Violations")) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind() +
+  labs(
+    title="Total Arrests for Cannabis Possession by Region",
+    x="Region",
+    y="Arrests",
+    caption="Data from Open Data Newfoundland and Labrador",
+  ) +
+  coord_flip()
+```
+
+The **Northeast Avalon** is the leader in terms of arrests for cannabis possession.
+
+## Is there a trend in the number of arrests for cannabis possession across the province?
+
+```{r}
+  data |>
+    group_by(year) |>
+    summarize(posession_cannabis=sum(posession_cannabis)) |>
+    ggplot(aes(year,posession_cannabis)) +
+    geom_line() +
+    geom_smooth(se=FALSE,method="lm") +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Arrests for Cannabis Possession",
+      x = "Year",
+      y = "Charges",
+      caption="Data from Open Data Newfoundland and Labrador"
+    )
+```
+
+There has been a general trend **downward** in the number of arrests for cannabis possession. In particular there was a steep drop in the number of arrests in 2018; this may coincide with the [legalization of cannabis in Canada](https://en.wikipedia.org/wiki/Legal_history_of_cannabis_in_Canada) in October of 2018.
+
+## How have incidents of the posession of cocaine varied by region?
+
+```{r}
+  data |>
+  ggplot(aes(x=reorder(geography,possession_cocaine))) +
+  geom_col(aes(y=possession_cocaine,fill="Violations",color="Violations")) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind() +
+  labs(
+    title="Total Arrests for Cocaine Possession by Region",
+    x="Region",
+    y="Arrests",
+    caption="Data from Open Data Newfoundland and Labrador",
+  ) +
+  coord_flip()
+```
+
+The **Northeast Avalon** region ranks first in terms of arrests for cocaine possession.
+
+## Is there a trend in the number of arrests for cocaine possession across the province?
+
+```{r}
+  data |>
+    group_by(year) |>
+    summarize(possession_cocaine=sum(possession_cocaine)) |>
+    ggplot(aes(year,possession_cocaine)) +
+    geom_line() +
+    geom_smooth(se=FALSE,method="lm") +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Arrests for Cocaine Possession",
+      x = "Year",
+      y = "Charges",
+      caption="Data from Open Data Newfoundland and Labrador"
+    )
+```
+
+There is a clear, upward trend in the number of arrests for cocaine possession over time in the province.
+
+## How has trafficking of drugs and controlled substances changed over time in the province?
+
+```{r}
+  data |>
+    group_by(year) |>
+    reframe(
+      total_cannabis_trafficking_production_or_distribution=sum(total_cannabis_trafficking_production_or_distribution),
+      total_cocaine_trafficking_production_or_distribution=sum(total_cocaine_trafficking_production_or_distribution),
+      total_other_controlled_drugs_and_substances_act_drugs_trafficking_production_or_distribution=sum(total_other_controlled_drugs_and_substances_act_drugs_trafficking_production_or_distribution)
+      ) |>
+    ggplot(aes(year)) +
+    geom_line(aes(y=total_cannabis_trafficking_production_or_distribution,color="Total Cannabis")) +
+    geom_line(aes(y=total_cocaine_trafficking_production_or_distribution,color="Total Cocaine")) +
+    geom_line(aes(y=total_other_controlled_drugs_and_substances_act_drugs_trafficking_production_or_distribution,color="Total Other Controlled Drugs and Substances")) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Distribution, Production and Trafficking by Type",
+      x = "Year",
+      y = "Incidents",
+      caption="Data from Open Data Newfoundland and Labrador",
+      color="Legend"
+    ) +
+    scale_color_colorblind() +
+    scale_fill_colorblind() +
+    theme(legend.position="bottom") +
+    guides(color=guide_legend(nrow=3, byrow=TRUE))
+```
+
+As demonstrated, the total amount of distribution, production and trafficking in cannabis has decreased over time. In contrast, since cannabis was legalized in 2018, there has been a definite increase in recent years in the amount of distribution, production and trafficking in other drugs, cocaine specifically. This is a troubling development, as many of these controlled substances are responsible for **vastly** more damage, to one's body and the community at large.
+
 # Summary
 
 In almost every category of crime studied, the dominance of the **Northeast Avalon** region in terms of sheer numbers cannot be ignored. This is perhaps to be expected, however; the **Northeast Avalon** is home to over [200,000](https://www150.statcan.gc.ca/n1/daily-quotidien/200131/t002c-eng.htm) people, nearly half of the entire population of the province. This may, in part, explain the dominance of the region in terms of total amounts of crime. 
