@@ -813,10 +813,12 @@ Identity theft and fraud were introduced as violation codes in January of 2010, 
     labs(
       title="Total Incidents of Identity Theft",
       x = "Year",
-      y = "Charges",
+      y = "Incidents",
       caption="Data from Open Data Newfoundland and Labrador"
     )
 ```
+
+The plot demonstrates a clear, **positive** trend in the number of incidents of identity theft across the province.
 
 ## How do the incidents of identity fraud vary by region?
 
