@@ -685,7 +685,7 @@ The **Northeast Avalon** region leads in terms of incidences of criminal harassm
 
 The **Northeast Avalon** region dominates in terms of incidents of uttering threats.
 
-## How do the total number of threatening phone calls break down by region?
+## How do the total number of threatening phone calls vary by region?
 
 ```{r}
   title <- "Total Incidents of Threatening or Harassing Phone Calls By Region" |>
