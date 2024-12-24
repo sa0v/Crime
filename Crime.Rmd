@@ -938,6 +938,7 @@ The data reveals a weak, **negative** relationship; impaired driving charges in 
     mutate(bodily_harm_or_death=if_else(impaired_operation_causing_bodily_harm > 0,"Bodily Harm","Death"),width=0.5) |>
     ggplot(aes(year)) +
     geom_col(aes(y=impaired_operation_causing_bodily_harm,fill=bodily_harm_or_death),width=0.5,position="dodge") +
+    geom_col(aes(y=impaired_operation_causing_death,fill=bodily_harm_or_death),width=0.5,position="dodge") +
   scale_x_continuous(breaks=seq(2006,2020,1)) +
   labs(
     title="Total Impaired Driving Charges Causing Bodily Harm or Death",
