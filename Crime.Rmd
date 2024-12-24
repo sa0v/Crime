@@ -1218,7 +1218,7 @@ There is a clear, upward trend in the number of arrests for cocaine possession o
     ggplot(aes(year)) +
     geom_line(aes(y=total_cannabis_trafficking_production_or_distribution,color="Total cannabis")) +
     geom_line(aes(y=total_cocaine_trafficking_production_or_distribution,color="Total cocaine")) +
-    geom_line(aes(y=total_other_controlled_drugs_and_substances_act_drugs_trafficking_production_or_distribution,color="Total other controlled drugs and substances")) +
+    geom_line(aes(y=total_other_controlled_drugs_and_substances_act_drugs_trafficking_production_or_distribution,color="Total other drugs and controlled substances")) +
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Distribution, Production and Trafficking by Type",
