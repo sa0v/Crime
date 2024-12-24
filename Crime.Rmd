@@ -362,7 +362,7 @@ We see in this case that the **Northeast Avalon** experienced the most robberies
     scale_x_continuous(breaks=seq(2006,2020,1))
 ```
 
-There has been a clear, **positive** trend in the number of robberies over time in the **Northeast Avalon** region. However, it would take more data and further study to determine the exact reasons for such a disparity between this region and the others.
+There has been a clear, **positive** trend in the number of robberies over time in the **Northeast Avalon** region.
 
 ## How did the various regions break down in terms of shoplifting incidents?
 
