@@ -324,7 +324,7 @@ In this case the **Northeast Avalon** region outnumbers all others in terms of c
     theme(legend.position="none")
 ```
 
-The majority of the indecent acts in the province were committed in the **Northeast Avalon** region.
+The majority of crimes involving indecent acts were committed in the **Northeast Avalon** region.
 
 # Robbery and Theft
 
