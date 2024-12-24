@@ -76,6 +76,7 @@ The **Northeast Avalon** region experienced the largest number of homicides.
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Homicides",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Homicides",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -116,6 +117,7 @@ Here we see that the **Northeast Avalon** region leads in terms of assaults agai
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Assaults Against Peace Officers",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Assaults",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -124,7 +126,7 @@ Here we see that the **Northeast Avalon** region leads in terms of assaults agai
 
 There appears to be a weak, **positive** trend but it is difficult to say with certainty. The plot may be deceptive, however, particularly in the case of the "peak" during 2010 when assaults against peace officers were apparently the highest. The [metadata](https://opendata.gov.nl.ca/public/opendata/filedownload/?file-id=41) for the data set used in this study notes that, "new legislation in 2009 regarding assaults on peace officers may be the cause of an increase in reported offenses."
 
-## What kind and number of assaults were committed against members of the public in the Northeast Avalon region?
+## What kind and number of assaults were committed against members of the public in the province?
 
 Assaults are ranked on a scale. There are three levels:
 
@@ -134,7 +136,12 @@ Assaults are ranked on a scale. There are three levels:
 
 ```{r}
   data |>
-    filter(geography=="Northeast Avalon, R.N.C.") |>
+    group_by(year) |>
+    reframe(
+      assault_level_1 = sum(assault_level_1),
+      assault_level_2_with_weapon_or_causing_bodily_harm = sum(assault_level_2_with_weapon_or_causing_bodily_harm),
+      assault_level_3_aggravated = sum(assault_level_3_aggravated)
+    ) |>
     ggplot(aes(year)) +
     geom_line(aes(y=assault_level_1,color="Assault (Level 1)")) +
     geom_line(aes(y=assault_level_2_with_weapon_or_causing_bodily_harm,color="Assault (Level 2)")) +
@@ -143,7 +150,7 @@ Assaults are ranked on a scale. There are three levels:
   theme(legend.position="bottom") +
   labs(
     title="Total Assaults Against Members of the Public (Level 1-3)",
-    subtitle="Northeast Avalon",
+    subtitle="Newfoundland and Labrador",
     x="Year",
     y="Assaults",
     caption="Data from Open Data Newfoundland and Labrador",
@@ -154,7 +161,7 @@ Assaults are ranked on a scale. There are three levels:
   scale_fill_colorblind()
 ```
 
-Level 1 assaults account for more than any other level in the **Northeast Avalon** region.
+Level 1 assaults account for more than any other level, with level 3 assaults (the most serious on the scale) far less common.
 
 # Sex Crimes
 
