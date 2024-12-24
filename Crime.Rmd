@@ -382,7 +382,9 @@ There has been a clear, **positive** trend in the number of robberies over time 
     coord_flip()
 ```
 
-Here again, we see that the **Northeast Avalon** dominates by a wide margin in terms of the number of total minor shoplifting incidents over time. Is this part of a trend as well?
+Here again, we see that the **Northeast Avalon** dominates by a wide margin in terms of the number of total minor shoplifting incidents over time.
+
+## Is this part of a trend for the region?
 
 ```{r}
   data |>
@@ -402,7 +404,7 @@ Here again, we see that the **Northeast Avalon** dominates by a wide margin in t
 
 The number of minor shoplifting incidents in the **Northeast Avalon** region seem to be trending **downward** over time.
 
-What about the number of serious shoplifting incidents, in which property of over $5,000 in value was stolen?
+## What about incidents in which over $5,000 of property was stolen?
 
 ```{r}
   data |>
@@ -420,7 +422,9 @@ What about the number of serious shoplifting incidents, in which property of ove
     coord_flip()
 ```
 
-Again, we see that the **Northeast Avalon** region vastly outnumbers its neighbors in terms of shoplifting incidents, even when those incidents involve much more expensive property. The trend here may also be revealing.
+Again, we see that the **Northeast Avalon** region vastly outnumbers its neighbors in terms of shoplifting incidents, even when those incidents involve much more expensive property.
+
+## Is this part of a greater trend for the region?
 
 ```{r}
   data |>
@@ -460,7 +464,9 @@ For the purposes of studying motor vehicle thefts, only the theft of the vehicle
   coord_flip()
 ```
 
-The **Northeast Avalon** region experienced the largest total number of motor vehicle thefts. What about the general trend over time?
+The **Northeast Avalon** region experienced the largest total number of motor vehicle thefts. 
+
+## What about the general trend in motor vehicle thefts over time?
 
 ```{r}
   data |>
