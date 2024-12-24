@@ -82,7 +82,7 @@ The **Northeast Avalon** region experienced the largest number of homicides over
     )
 ```
 
-The relationship is too weak to say with any certainty whether or not the number of total homicides is increasing or decreasing with time.
+The relationship is a weak one in this case, but it is evident that homicides are **decreasing** over time across the province.
 
 ## Which region leads in assaults against peace officers?
 
@@ -1035,13 +1035,11 @@ It would appear that the number of prohibited drivers on the road is **increasin
 
 # Summary
 
-In almost every category of crime studied, the dominance of the **Northeast Avalon** region in terms of sheer numbers cannot be ignored. This is perhaps to be expected, however; the **Northeast Avalon** is home to over [200,000](https://www150.statcan.gc.ca/n1/daily-quotidien/200131/t002c-eng.htm) people, nearly half of the entire population of the province. This may, in part, explain the dominance of the region in terms of total amounts of crime. However, the trends displayed are not so easily dismissed. With few exceptions, the **Northeast Avalon** displayed a **positive** trend in the amount of crime under study; in almost every case, crime in the region is increasing over time.
+In almost every category of crime studied, the dominance of the **Northeast Avalon** region in terms of sheer numbers cannot be ignored. This is perhaps to be expected, however; the **Northeast Avalon** is home to over [200,000](https://www150.statcan.gc.ca/n1/daily-quotidien/200131/t002c-eng.htm) people, nearly half of the entire population of the province. This may, in part, explain the dominance of the region in terms of total amounts of crime. 
 
 This study has obvious weaknesses:
 
-1. The trends in crime for the **Northeast Avalon** may or may not be representative of the trends for the other regions, or the province as a whole.
-
-2. This study only considers charges laid with respect to incidents and violations. It does **not** take into consideration the following court proceedings and their outcomes (e.g. whether or not a person is found innocent or guilty of what they are charged of).
+1. This study only considers charges laid with respect to incidents and violations. It does **not** take into consideration the following court proceedings and their outcomes (e.g. whether or not a person is found innocent or guilty of what they are charged of).
 
 # Conclusion
 
