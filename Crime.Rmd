@@ -935,7 +935,12 @@ The data reveals a weak, **negative** relationship; impaired driving charges in 
 
 ```{r}
   data |>
-    mutate(bodily_harm_or_death=if_else(impaired_operation_causing_bodily_harm > 0,"Bodily Harm","Death"),width=0.5) |>
+    mutate(bodily_harm_or_death=case_when(
+      impaired_operation_causing_bodily_harm > 0 ~ "Bodily Harm",
+      impaired_operation_causing_death > 0 ~ "Death",
+      .default = NA
+    ),width=0.5) |>
+    drop_na(bodily_harm_or_death) |>
     ggplot(aes(year)) +
     geom_col(aes(y=impaired_operation_causing_bodily_harm,fill=bodily_harm_or_death),width=0.5,position="dodge") +
     geom_col(aes(y=impaired_operation_causing_death,fill=bodily_harm_or_death),width=0.5,position="dodge") +
