@@ -577,6 +577,7 @@ What about the use of weapons in general?
     scale_fill_colorblind() +
     coord_flip()
 ```
+
 Once again, we see that the **Northeast Avalon** ranks first, this time in terms of total weapons violations.
 
 ## Is the large number of total weapons violations in the Northeast Avalon part of a trend?
@@ -762,7 +763,7 @@ The **Northeast Avalon** region dominates in terms of total counts of fraud by a
 
 Identity theft is clearly a prevalent issue in the **Northeast Avalon** region.
 
-## Is there a trend in the total counts of identity fraud in the Northeast Avalon region?
+## Is there a trend in the total counts of identity theft in the Northeast Avalon region?
 
 The metadata for the data set used in this study indicate that identity fraud and theft are both new violation codes as of January 2010. For the purposes of studying counts of identity theft, then, only years greater than or equal to 2010 will be considered.
 
