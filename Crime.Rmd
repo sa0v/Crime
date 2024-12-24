@@ -1233,7 +1233,7 @@ There is a clear, upward trend in the number of arrests for cocaine possession o
     guides(color=guide_legend(nrow=3, byrow=TRUE))
 ```
 
-As demonstrated, the total amount of distribution, production and trafficking in cannabis has decreased over time. In contrast, since cannabis was legalized in 2018, there has been a definite increase in recent years in the amount of distribution, production and trafficking in other drugs, cocaine specifically. This is a troubling development, as many of these controlled substances are responsible for **vastly** more damage, to one's body and the community at large.
+As demonstrated, the total amount of distribution, production and trafficking in cannabis has decreased over time. In contrast, since cannabis was legalized in 2018, there has been a definite increase in recent years in the amount of distribution, production and trafficking in other drugs, cocaine specifically.
 
 # Summary
 
