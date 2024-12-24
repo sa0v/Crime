@@ -869,36 +869,6 @@ The **Northeast Avalon** region leads in terms of total property crime violation
 
 There does appear to be a **positive** trend in the number of total property crime violations in the **Northeast Avalon** region.
 
-## How do the various forms of property crime rank in the Northeast Avalon region?
-
-```{r}
-  data |>
-    filter(geography=="Northeast Avalon, R.N.C.") |>
-    ggplot(aes(year)) +
-    geom_line(aes(y=total_breaking_and_entering,color="Breaking and Entering")) +
-    geom_line(aes(y=possession_of_stolen_property,color="Possession of Stolen Property")) +
-    geom_line(aes(y=arson,color="Arson")) +
-    geom_line(aes(y=trespass_at_night,color="Tresspass at Night")) +
-    geom_line(aes(y=theft_5_000_or_under_from_a_motor_vehicle,color="Theft from Motor Vehicle ($5,000 or under)")) +
-    geom_line(aes(y=theft_over_5_000_from_a_motor_vehicle,color="Theft from Motor Vehicle (over $5,000)")) +
-  scale_x_continuous(breaks=seq(2006,2020,1)) +
-  scale_y_log10() +
-  theme(legend.position="bottom") +
-  labs(
-    title="Property Crimes by Type",
-    subtitle="Northeast Avalon",
-    x="Year",
-    y="Charges",
-    caption="Data from Open Data Newfoundland and Labrador",
-    color="Legend",
-  ) +
-  guides(color=guide_legend(nrow=3, byrow=TRUE)) +
-  scale_color_colorblind() +
-  scale_fill_colorblind()
-```
-
-In the case of the **Northeast Avalon** region, breaking and entering is by far the most common property crime committed.
-
 # Summary
 
 In almost **every** category of crime studied, whether it be robberies, firearms offences or others, the dominance of the **Northeast Avalon** region in terms of sheer numbers cannot be ignored. This is perhaps an expected result, however; the **Northeast Avalon** is home to over [200,000](https://www150.statcan.gc.ca/n1/daily-quotidien/200131/t002c-eng.htm) people, nearly half of the entire population of the province. The remaining regions each comprise a considerably smaller percentage of the population; as such, the prevalence of the **Northeast Avalon** on the preceding plots may simply be a result of the region's high population. 
