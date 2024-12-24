@@ -1237,7 +1237,7 @@ As demonstrated, the total amount of distribution, production and trafficking in
 
 # Summary
 
-In almost every category of crime studied, the dominance of the **Northeast Avalon** region in terms of sheer numbers cannot be ignored. This is perhaps to be expected, however; the **Northeast Avalon** is home to over [200,000](https://www150.statcan.gc.ca/n1/daily-quotidien/200131/t002c-eng.htm) people, nearly half of the entire population of the province. This may, in part, explain the dominance of the region in terms of total amounts of crime. 
+The dominance of the **Northeast Avalon** region in terms of sheer numbers of crimes committed cannot be ignored. This result is perhaps to be expected, however; the **Northeast Avalon** is home to over [200,000](https://www150.statcan.gc.ca/n1/daily-quotidien/200131/t002c-eng.htm) people, nearly half of the entire population of the province. This may, in part, explain why the region dominates in terms of total crimes committed across a broad spectrum of offences. 
 
 This study has obvious weaknesses:
 
