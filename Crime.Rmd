@@ -727,7 +727,27 @@ Once again, the **Northeast Avalon** dominates in terms of total incidents, this
 
 Clearly, there has been a **positive** trend in the number of threatening or harassing phone calls over time, with respect to the **Northeast Avalon** region.
 
-# Fraud and Identity Theft
+# Extortion, Fraud and Identity Theft
+
+## How do incidents of extortion vary by region?
+
+```{r}
+  data |>
+  ggplot(aes(x=reorder(geography,extortion))) +
+  geom_col(aes(y=extortion,fill="Incidents",color="Incidents")) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind() +
+  labs(
+    title="Total Incidents of Extortion by Region",
+    x="Region",
+    y="Incidents",
+    caption="Data from Open Data Newfoundland and Labrador",
+  ) +
+  coord_flip()
+```
+
+Once again, the **Northeast Avalon** region ranks first, this time in incidents of extortion.
 
 ## How do the regions vary in terms of total counts of fraud?
 
