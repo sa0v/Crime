@@ -1002,7 +1002,7 @@ It would appear that in the case of the **Northeast Avalon** region, the number 
 
 # Summary
 
-In almost **every** category of crime studied, the dominance of the **Northeast Avalon** region in terms of sheer numbers cannot be ignored. This is perhaps to be expected, however; the **Northeast Avalon** is home to over [200,000](https://www150.statcan.gc.ca/n1/daily-quotidien/200131/t002c-eng.htm) people, nearly half of the entire population of the province. The remaining regions each comprise a considerably smaller percentage of the population. The fact remains that the **Northeast Avalon** region dominates in terms of sheer numbers, when it comes to a broad spectrum and variety of crimes committed. In almost every case, the region shows an upward trend in the type of crime under study.
+In almost every category of crime studied, the dominance of the **Northeast Avalon** region in terms of sheer numbers cannot be ignored. This is perhaps to be expected, however; the **Northeast Avalon** is home to over [200,000](https://www150.statcan.gc.ca/n1/daily-quotidien/200131/t002c-eng.htm) people, nearly half of the entire population of the province. This may, in part, explain the dominance of the region in terms of total amounts of crime. However, the trends displayed are not so easily dismissed. With few exceptions, the **Northeast Avalon** displayed a **positive** trend in the amount of crime under study; in almost every case, crime in the region is increasing over time.
 
 This study has obvious weaknesses:
 
