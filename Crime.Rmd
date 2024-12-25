@@ -262,6 +262,7 @@ The **Northeast Avalon** district experienced the most total sexual violations a
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Sexual Violations Against Children by Type",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Incidents",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -285,6 +286,7 @@ These numbers do not account for the total sex crimes committed against children
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Sexual Violations Against Children",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Incidents",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -367,6 +369,7 @@ We see in this case that the **Northeast Avalon** experienced the most robberies
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Incidents of Robbery",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Incidents",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -407,6 +410,7 @@ Here again, we see that the **Northeast Avalon** dominates by a wide margin in t
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Incidents of Shoplifting ($5,000 or Under)",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Incidents",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -447,6 +451,7 @@ Again, we see that the **Northeast Avalon** region vastly outnumbers its neighbo
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Incidents of Shoplifting",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Incidents",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -489,6 +494,7 @@ The **Northeast Avalon** region experienced the largest total number of motor ve
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Motor Vehicle Thefts",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Thefts",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -570,6 +576,7 @@ The **Northeast Avalon** region vastly outstrips the other regions in terms of f
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Firearms Violations",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Violations",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -611,6 +618,7 @@ Once again, we see that the **Northeast Avalon** ranks first, this time in terms
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Weapons Violations",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Violations",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -650,6 +658,7 @@ The **Northeast Avalon** region leads in terms of charges for weapons possession
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Charges of Possession of Weapons",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Charges",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -735,6 +744,7 @@ Once again, the **Northeast Avalon** dominates in terms of total incidents, this
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Incidents of Criminal Harassment",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Incidents",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -820,6 +830,7 @@ Identity theft and fraud were introduced as violation codes in January of 2010, 
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Incidents of Identity Theft",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Incidents",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -863,6 +874,7 @@ Again, since identity fraud as a violation code was only introduced in 2010, in 
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Incidents of Identity Fraud",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Incidents",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -925,6 +937,7 @@ The **Northeast Avalon** region leads in terms of total property crime violation
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Property Crime Violations",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Violations",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -965,6 +978,7 @@ The **Northeast Avalon** region vastly outstrips its neighbors in terms of break
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Breaking and Entering Charges",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Charges",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -1005,6 +1019,7 @@ We see that the **Northeast Avalon** region leads in total incidents of arson.
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Incidents of Arson",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Incidents",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -1047,6 +1062,7 @@ The **Northeast Avalon** leads in terms of total impaired driving charges.
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Impaired Driving Charges",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Charges",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -1059,26 +1075,24 @@ There is a definite **increase** in the number of impaired driving charges in th
 
 ```{r}
   data |>
-    mutate(bodily_harm_or_death=case_when(
-      impaired_operation_causing_bodily_harm > 0 ~ "Bodily Harm",
-      impaired_operation_causing_death > 0 ~ "Death",
-      .default = NA
-    ),width=0.5) |>
-    drop_na(bodily_harm_or_death) |>
+    group_by(year) |>
+    reframe(
+      impaired_operation_causing_bodily_harm=sum(impaired_operation_causing_bodily_harm),
+      impaired_operation_causing_death=sum(impaired_operation_causing_death)) |>
     ggplot(aes(year)) +
-    geom_col(aes(y=impaired_operation_causing_bodily_harm,fill=bodily_harm_or_death),width=0.5,position="dodge") +
-    geom_col(aes(y=impaired_operation_causing_death,fill=bodily_harm_or_death),width=0.5,position="dodge") +
-  scale_x_continuous(breaks=seq(2006,2020,1)) +
-  labs(
-    title="Total Impaired Driving Charges Causing Bodily Harm or Death",
-    x="Year",
-    y="Charges",
-    caption="Data from Open Data Newfoundland and Labrador",
-    fill="Legend"
-  ) +
-  scale_color_colorblind() +
-  scale_fill_colorblind() +
-  guides(color="none")
+    geom_line(aes(y=impaired_operation_causing_bodily_harm,color="Bodily Harm")) +
+    geom_line(aes(y=impaired_operation_causing_death,color="Death")) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Impaired Operation Causing Bodily Harm and Death",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Charges",
+      caption="Data from Open Data Newfoundland and Labrador",
+      color="Legend"
+    ) +
+    scale_color_colorblind() +
+    scale_fill_colorblind()
 ```
 
 Thankfully, the number of impaired driving incidents in Newfoundland and Labrador that result in injury or death remain relatively low, compared to the number of impaired drivers on the road.
@@ -1115,6 +1129,7 @@ The **Northeast Avalon** leads in terms of drivers who are arrested while drivin
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Driving While Prohibited Charges",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Charges",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -1157,6 +1172,7 @@ The **Northeast Avalon** is the leader in terms of arrests for cannabis possessi
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Arrests for Cannabis Possession",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Arrests",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -1197,6 +1213,7 @@ The **Northeast Avalon** region ranks first in terms of arrests for cocaine poss
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Total Arrests for Cocaine Possession",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Arrests",
       caption="Data from Open Data Newfoundland and Labrador"
@@ -1222,6 +1239,7 @@ There is a clear, upward trend in the number of arrests for cocaine possession o
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
       title="Distribution, Production and Trafficking by Type",
+      subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Incidents",
       caption="Data from Open Data Newfoundland and Labrador",
