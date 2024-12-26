@@ -1222,37 +1222,6 @@ The **Northeast Avalon** region ranks first in terms of arrests for cocaine poss
 
 There is a clear, upward trend in the number of arrests for cocaine possession over time in the province.
 
-## How has trafficking of drugs and controlled substances changed over time in the province?
-
-```{r}
-  data |>
-    group_by(year) |>
-    reframe(
-      total_cannabis_trafficking_production_or_distribution=sum(total_cannabis_trafficking_production_or_distribution),
-      total_cocaine_trafficking_production_or_distribution=sum(total_cocaine_trafficking_production_or_distribution),
-      total_other_controlled_drugs_and_substances_act_drugs_trafficking_production_or_distribution=sum(total_other_controlled_drugs_and_substances_act_drugs_trafficking_production_or_distribution)
-      ) |>
-    ggplot(aes(year)) +
-    geom_line(aes(y=total_cannabis_trafficking_production_or_distribution,color="Total cannabis")) +
-    geom_line(aes(y=total_cocaine_trafficking_production_or_distribution,color="Total cocaine")) +
-    geom_line(aes(y=total_other_controlled_drugs_and_substances_act_drugs_trafficking_production_or_distribution,color="Total other drugs and controlled substances")) +
-    scale_x_continuous(breaks=seq(2006,2020,1)) +
-    labs(
-      title="Distribution, Production and Trafficking by Type",
-      subtitle="Newfoundland and Labrador",
-      x = "Year",
-      y = "Incidents",
-      caption="Data from Open Data Newfoundland and Labrador",
-      color="Legend"
-    ) +
-    scale_color_colorblind() +
-    scale_fill_colorblind() +
-    theme(legend.position="bottom") +
-    guides(color=guide_legend(nrow=3, byrow=TRUE))
-```
-
-As demonstrated, the total amount of distribution, production and trafficking in cannabis has decreased over time. In contrast, since cannabis was legalized in 2018, there has been a definite increase in recent years in the amount of distribution, production and trafficking in other drugs, cocaine specifically.
-
 # Summary
 
 The dominance of the **Northeast Avalon** region in terms of sheer numbers of crimes committed cannot be ignored. This result is perhaps to be expected, however; the **Northeast Avalon** is home to over [200,000](https://www150.statcan.gc.ca/n1/daily-quotidien/200131/t002c-eng.htm) people, nearly half of the entire population of the province. This may, in part, explain why the region dominates in terms of total crimes committed across a broad spectrum of offences. 
