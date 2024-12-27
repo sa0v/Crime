@@ -1189,4 +1189,4 @@ This study has obvious weaknesses:
 
 # Conclusion
 
-The **Northeast Avalon** region of Newfoundland and Labrador, being the most populated in the province, is also host to the majority of its crime. However, this study has demonstrated that the problem of growing crime rates is not isolated to that region alone. In fact, for a broad spectrum of offences across the province, the number of crimes committed has been demonstrated to be **increasing.** This will continue to pose a challenge for law enforcement.
+The **Northeast Avalon** region of Newfoundland and Labrador, being the most populated in the province, is also host to the majority of its crime. However, this study has demonstrated that the problem of growing crime rates is not isolated to that region alone. In fact, for a broad spectrum of offences across the province, the number of crimes committed has been demonstrated to be **increasing,** with some exceptions. This will continue to pose a challenge for law enforcement.
