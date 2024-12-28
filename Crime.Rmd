@@ -309,7 +309,8 @@ The **Northeast Avalon** district experienced the most total sexual violations a
       subtitle="Newfoundland and Labrador",
       x = "Year",
       y = "Incidents",
-      caption="Data from Open Data Newfoundland and Labrador"
+      caption="Data from Open Data Newfoundland and Labrador",
+      colour="Legend",
     ) +
     scale_color_colorblind() +
     scale_fill_colorblind() +
@@ -526,45 +527,76 @@ The **Northeast Avalon** region experienced the largest total number of motor ve
 
 The number of total motor vehicle thefts is trending **downward** over time.
 
-## Thefts from motor vehicles
-
-How do the regions rank in terms of thefts from motor vehicles? In the case of thefts under $5,000:
+## Is theft from motor vehicles more common below or above $5,000?
 
 ```{r}
   data |>
-  ggplot(aes(reorder(geography,theft_5_000_or_under_from_a_motor_vehicle),theft_5_000_or_under_from_a_motor_vehicle)) +
-  geom_col(aes(fill="Thefts",color="Thefts")) + 
-  labs(
-    title="Total Thefts From Motor Vehicles (Under $5,000)",
-    x="Region",
-    y="Thefts",
-    caption="Data from Open Data Newfoundland and Labrador",
+  pivot_longer(
+    cols=c(theft_5_000_or_under_from_a_motor_vehicle,theft_over_5_000_from_a_motor_vehicle),
+    names_to="motor_vehicle_theft_type",
+    values_to="motor_vehicle_theft_amount",
+  ) |>
+  ggplot(aes(year)) +
+  geom_col(aes(fill=motor_vehicle_theft_type,y=motor_vehicle_theft_amount),position="dodge") +
+  scale_x_continuous(breaks=c(2006,2020)) +
+  guides(
+    guides(fill=guide_legend(nrow=3,byrow=TRUE))
   ) +
-  theme(legend.position="none") +
   scale_color_colorblind() +
   scale_fill_colorblind() +
-  coord_flip()
+  labs(
+    title="Motor Vehicle Thefts by Type",
+    subtitle="Newfoundland and Labrador",
+    x="Year",
+    y="Thefts",
+    fill="Legend",
+    caption="Data from Open Data Newfoundland and Labrador",
+  )
 ```
 
-In the case of thefts above $5,000:
+When it comes to thefts from motor vehicles, thefts below \$5,000 are far more common than those above \$5,000.
+
+## (TODO) What are the trends for theft from motor vehicles across the province?
+
+For thefts from motor vehicles below $5,000:
 
 ```{r}
   data |>
-  ggplot(aes(reorder(geography,theft_over_5_000_from_a_motor_vehicle),theft_over_5_000_from_a_motor_vehicle)) +
-  geom_col(aes(fill="Thefts",color="Thefts")) + 
-  labs(
-    title="Total Thefts From Motor Vehicles (Over $5,000)",
-    x="Region",
-    y="Thefts",
-    caption="Data from Open Data Newfoundland and Labrador",
-  ) +
-  theme(legend.position="none") +
-  scale_color_colorblind() +
-  scale_fill_colorblind() +
-  coord_flip()
+    group_by(year) |>
+    summarize(theft_5_000_or_under_from_a_motor_vehicle=sum(theft_5_000_or_under_from_a_motor_vehicle)) |>
+    ggplot(aes(year,theft_5_000_or_under_from_a_motor_vehicle)) +
+    geom_line() +
+    geom_smooth(se=FALSE,method="lm") +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Theft from Motor Vehicles ($5,000 or Under)",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Incidents",
+      caption="Data from Open Data Newfoundland and Labrador"
+    )
 ```
 
-In both cases, the **Northeast Avalon** region leads in terms of thefts from motor vehicles by a wide margin.
+Thefts from motor vehicles below \$5,000 are clearly **decreasing** with time. What about thefts above \$5,000?
+
+```{r}
+  data |>
+    group_by(year) |>
+    summarize(theft_over_5_000_from_a_motor_vehicle=sum(theft_over_5_000_from_a_motor_vehicle)) |>
+    ggplot(aes(year,theft_over_5_000_from_a_motor_vehicle)) +
+    geom_line() +
+    geom_smooth(se=FALSE,method="lm") +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Theft from Motor Vehicles (Over $5,000)",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Incidents",
+      caption="Data from Open Data Newfoundland and Labrador"
+    )
+```
+
+The number of high-value thefts from motor vehicles in the province is clearly **increasing** with time.
 
 # Firearms and Weapons Offences
 
