@@ -536,6 +536,10 @@ The number of total motor vehicle thefts is trending **downward** over time.
     names_to="motor_vehicle_theft_type",
     values_to="motor_vehicle_theft_amount",
   ) |>
+  mutate(motor_vehicle_theft_type = case_when(
+    motor_vehicle_theft_type == "theft_5_000_or_under_from_a_motor_vehicle" ~ "$5,000 or Under",
+    motor_vehicle_theft_type == "theft_over_5_000_from_a_motor_vehicle" ~ "Over $5,000"
+  )) |>
   ggplot(aes(year)) +
   geom_col(aes(fill=motor_vehicle_theft_type,y=motor_vehicle_theft_amount),position="dodge") +
   scale_x_continuous(breaks=c(2006,2020)) +
@@ -551,12 +555,15 @@ The number of total motor vehicle thefts is trending **downward** over time.
     y="Thefts",
     fill="Legend",
     caption="Data from Open Data Newfoundland and Labrador",
+  ) +
+  theme(
+    legend.position="bottom"
   )
 ```
 
 When it comes to thefts from motor vehicles, thefts below \$5,000 are far more common than those above \$5,000.
 
-## (TODO) What are the trends for theft from motor vehicles across the province?
+## What are the trends for theft from motor vehicles across the province?
 
 For thefts from motor vehicles below $5,000:
 
