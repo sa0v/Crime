@@ -163,6 +163,7 @@ Assaults are ranked on a scale. There are three levels:
     x="Year",
     y="Assaults",
     fill="Legend",
+    caption="Data from Open Data Newfoundland and Labrador",
   ) +
   scale_color_colorblind() +
   scale_fill_colorblind()
@@ -234,7 +235,7 @@ Again, the **Northeast Avalon** leads in terms of sexual assaults (level 2), thi
 
 The **Labrador District** experienced the greatest number of aggravated sexual assaults (level 3).
 
-## How do the various levels of sexual assault vary across the province?
+## How do the levels of sexual assault vary across the province?
 
 ```{r}
   data |>
@@ -262,6 +263,7 @@ The **Labrador District** experienced the greatest number of aggravated sexual a
     x="Year",
     y="Assaults",
     fill="Legend",
+    caption="Data from Open Data Newfoundland and Labrador",
   ) +
   scale_color_colorblind() +
   scale_fill_colorblind()
