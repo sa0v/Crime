@@ -43,6 +43,51 @@ This [RStudio](https://resources.rstudio.com/categories/rstudio-ide/) notebook s
 
 # Violent Crime
 
+## Which region experienced the largest number of total violent criminal code violations?
+
+We can get a sense for the scale of violent crime in the province by examining the total number of violent criminal code violations in each region.
+
+```{r}
+  data |>
+    ggplot(aes(reorder(geography,total_violent_criminal_code_violations), total_violent_criminal_code_violations)) +
+    geom_col(aes(fill="Violations",color="Violations")) +
+    labs(
+      title="Violent Criminal Code Violations by Region",
+      x="Region",
+      y="Violations",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) +
+    coord_flip() +
+    theme(legend.position = "none") +
+    scale_color_colorblind() +
+    scale_fill_colorblind()
+```
+
+It would seem that the **Northeast Avalon** region leads in terms of the number of total violent criminal code violations.
+
+This is the case for one region of the province, however. What about for the province as a whole?
+
+## Is there a trend in the number of total violent criminal code violations for the province?
+
+```{r}
+  data |>
+    group_by(year) |>
+    summarize(total_violent_criminal_code_violations=sum(total_violent_criminal_code_violations)) |>
+    ggplot(aes(year,total_violent_criminal_code_violations)) +
+    geom_line() +
+    geom_smooth(se=FALSE,method="lm") +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Violent Criminal Code Violations",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Incidents",
+      caption="Data from Open Data Newfoundland and Labrador"
+    )
+```
+
+There is an apparent, **upward** trend in the number of violent criminal code violations across the province. Let us now examine specific forms of violent crime and their numbers.
+
 ## Which region experienced the largest number of homicides?
 
 ```{r}
@@ -1189,4 +1234,4 @@ This study has obvious weaknesses:
 
 # Conclusion
 
-The **Northeast Avalon** region of Newfoundland and Labrador, being the most populated in the province, is also host to the majority of its crime. However, this study has demonstrated that the problem of growing crime rates is not isolated to that region alone. In fact, for a broad spectrum of offences across the province, the number of crimes committed has been demonstrated to be **increasing,** with some exceptions. This will continue to pose a challenge for law enforcement.
+The **Northeast Avalon** region of Newfoundland and Labrador, being the most populated in the province, is also host to the majority of its crime. However, this study has demonstrated that the problem of growing crime rates is not isolated to that region alone. For many types of offences, the number of crimes committed has been demonstrated to be **increasing** for the province in general. This will continue to pose a challenge for law enforcement.
