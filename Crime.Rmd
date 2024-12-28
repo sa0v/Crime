@@ -139,32 +139,36 @@ Assaults are ranked on a scale. There are three levels:
 
 ```{r}
   data |>
-    group_by(year) |>
-    reframe(
-      assault_level_1 = sum(assault_level_1),
-      assault_level_2_with_weapon_or_causing_bodily_harm = sum(assault_level_2_with_weapon_or_causing_bodily_harm),
-      assault_level_3_aggravated = sum(assault_level_3_aggravated)
-    ) |>
-    ggplot(aes(year)) +
-    geom_line(aes(y=assault_level_1,color="Assault (Level 1)")) +
-    geom_line(aes(y=assault_level_2_with_weapon_or_causing_bodily_harm,color="Assault (Level 2)")) +
-    geom_line(aes(y=assault_level_3_aggravated,color="Assault (Level 3)")) +
+  group_by(year) |>
+  pivot_longer(
+    cols = c(assault_level_1,assault_level_2_with_weapon_or_causing_bodily_harm,assault_level_3_aggravated),
+    names_to = "assault_type",
+    values_to = "assault_number",
+  ) |>
+  mutate(assault_type = case_when(
+    assault_type == "assault_level_1" ~ "Level 1",
+    assault_type == "assault_level_2_with_weapon_or_causing_bodily_harm" ~ "Level 2 (With a Weapon or Causing Bodily Harm)",
+    assault_type == "assault_level_3_aggravated" ~  "Level 3 (Aggravated)",
+  )) |>
+  ggplot(aes(year)) +
+  geom_col(aes(y=assault_number,fill=assault_type),position="dodge") +
+  theme(
+    legend.position="bottom"
+  ) +
   scale_x_continuous(breaks=seq(2006,2020,1)) +
-  theme(legend.position="bottom") +
+  guides(fill=guide_legend(nrow=3,byrow=TRUE)) + 
   labs(
-    title="Total Assaults Against Members of the Public (Level 1-3)",
+    title="Total Assaults by Type",
     subtitle="Newfoundland and Labrador",
     x="Year",
     y="Assaults",
-    caption="Data from Open Data Newfoundland and Labrador",
-    color="Legend"
+    fill="Legend",
   ) +
-  scale_y_log10() +
   scale_color_colorblind() +
   scale_fill_colorblind()
 ```
 
-Level 1 assaults account for more than any other level, with level 3 assaults (the most serious on the scale) far less common.
+**Level 1** assaults account for more than any other level.
 
 # Sex Crimes
 
@@ -229,6 +233,41 @@ Again, the **Northeast Avalon** leads in terms of sexual assaults (level 2), thi
 ```
 
 The **Labrador District** experienced the greatest number of aggravated sexual assaults (level 3).
+
+## How do the various levels of sexual assault vary across the province?
+
+```{r}
+  data |>
+  group_by(year) |>
+  pivot_longer(
+    cols = c(sexual_assault_level_1,sexual_assault_level_2_with_a_weapon_or_bodily_harm,sexual_assault_level_3_aggravated),
+    names_to = "sexual_assault_type",
+    values_to = "sexual_assault_number",
+  ) |>
+  mutate(sexual_assault_type = case_when(
+    sexual_assault_type == "sexual_assault_level_1" ~ "Level 1",
+    sexual_assault_type == "sexual_assault_level_2_with_a_weapon_or_bodily_harm" ~ "Level 2 (With a Weapon or Bodily Harm)",
+    sexual_assault_type == "sexual_assault_level_3_aggravated" ~  "Level 3 (Aggravated)",
+  )) |>
+  ggplot(aes(year)) +
+  geom_col(aes(y=sexual_assault_number,fill=sexual_assault_type),position="dodge") +
+  theme(
+    legend.position="bottom"
+  ) +
+  scale_x_continuous(breaks=seq(2006,2020,1)) +
+  guides(fill=guide_legend(nrow=3,byrow=TRUE)) + 
+  labs(
+    title="Total Sexual Assaults by Type",
+    subtitle="Newfoundland and Labrador",
+    x="Year",
+    y="Assaults",
+    fill="Legend",
+  ) +
+  scale_color_colorblind() +
+  scale_fill_colorblind()
+```
+
+The most common type of sexual assault across the province is **level 1.**
 
 ## How are children affected by sex crimes in Newfoundland and Labrador?
 
