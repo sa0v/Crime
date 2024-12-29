@@ -1221,7 +1221,7 @@ There is a definite **increase** in the number of impaired driving charges over 
   scale_fill_colorblind()
 ```
 
-Thankfully, the number of impaired driving incidents in Newfoundland and Labrador that result in injury or death remain relatively low, compared to the number of impaired drivers on the road.
+Incidents of impaired driving that resulted in bodily harm or death remained, thankfully, a small proportion of the total number of impaired driving incidents.
 
 ## How does the number of prohibited drivers on the road vary by region?
 
