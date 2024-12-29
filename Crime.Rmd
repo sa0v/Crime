@@ -176,6 +176,7 @@ Assaults are ranked on a scale. There are three levels:
 
 ```{r}
   data |>
+  distinct(geography,year,assault_type,.keep_all=TRUE) |>
   ggplot(aes(year)) +
   geom_col(aes(y=assault_number,fill=assault_type),position="dodge") +
   theme(
@@ -278,6 +279,7 @@ The **Labrador District** experienced the greatest number of aggravated sexual a
 
 ```{r}
   data |>
+  distinct(geography,year,sexual_assault_type,.keep_all=TRUE) |>
   ggplot(aes(year)) +
   geom_col(aes(y=sexual_assault_number,fill=sexual_assault_type),position="dodge") +
   theme(
@@ -538,6 +540,7 @@ The total number of motor vehicle thefts appears to be **decreasing** over time 
 
 ```{r}
   data |>
+  distinct(geography,year,motor_vehicle_theft_type,.keep_all=TRUE) |>
   ggplot(aes(year)) +
   geom_col(aes(fill=motor_vehicle_theft_type,y=motor_vehicle_theft_amount),position="dodge") +
   scale_x_continuous(breaks=c(2006,2020)) +
@@ -1171,6 +1174,7 @@ There is a definite **increase** in the number of impaired driving charges over 
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
     reframe(
       impaired_operation_causing_bodily_harm=sum(impaired_operation_causing_bodily_harm),
