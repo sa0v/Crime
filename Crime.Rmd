@@ -9,6 +9,7 @@ output:
   library(tidyverse)
   library(janitor)
   library(ggthemes)
+  library(scales)
 
   data <- read.csv("https://opendata.gov.nl.ca/public/opendata/filedownload/?file-id=17253")
 
@@ -36,7 +37,27 @@ output:
       geography != "Newfoundland and Labrador",
     ) |>
     select(!c('geography_type','geography_note','data_type')) |>
-    mutate(geography = str_replace(geography,"Northeast Avalon R.N.C","Northeast Avalon, R.N.C."))
+    mutate(geography = str_replace(geography,"Northeast Avalon R.N.C","Northeast Avalon, R.N.C.")) |>
+    pivot_longer(
+    cols = c(assault_level_1,assault_level_2_with_weapon_or_causing_bodily_harm,assault_level_3_aggravated),
+    names_to = "assault_type",
+    values_to = "assault_number",
+  ) |>
+  mutate(assault_type = case_when(
+    assault_type == "assault_level_1" ~ "Level 1",
+    assault_type == "assault_level_2_with_weapon_or_causing_bodily_harm" ~ "Level 2 (With a Weapon or Causing Bodily Harm)",
+    assault_type == "assault_level_3_aggravated" ~  "Level 3 (Aggravated)",
+  )) |>
+    pivot_longer(
+    cols = c(sexual_assault_level_1,sexual_assault_level_2_with_a_weapon_or_bodily_harm,sexual_assault_level_3_aggravated),
+    names_to = "sexual_assault_type",
+    values_to = "sexual_assault_number",
+  ) |>
+  mutate(sexual_assault_type = case_when(
+    sexual_assault_type == "sexual_assault_level_1" ~ "Level 1",
+    sexual_assault_type == "sexual_assault_level_2_with_a_weapon_or_bodily_harm" ~ "Level 2 (With a Weapon or Causing Bodily Harm)",
+    sexual_assault_type == "sexual_assault_level_3_aggravated" ~  "Level 3 (Aggravated)",
+  ))
 ```
 
 This [RStudio](https://resources.rstudio.com/categories/rstudio-ide/) notebook studies crime in Newfoundland and Labrador over a 14 year period, using a data set made available by **Open Data Newfoundland and Labrador** on their website.
@@ -139,17 +160,6 @@ Assaults are ranked on a scale. There are three levels:
 
 ```{r}
   data |>
-  group_by(year) |>
-  pivot_longer(
-    cols = c(assault_level_1,assault_level_2_with_weapon_or_causing_bodily_harm,assault_level_3_aggravated),
-    names_to = "assault_type",
-    values_to = "assault_number",
-  ) |>
-  mutate(assault_type = case_when(
-    assault_type == "assault_level_1" ~ "Level 1",
-    assault_type == "assault_level_2_with_weapon_or_causing_bodily_harm" ~ "Level 2 (With a Weapon or Causing Bodily Harm)",
-    assault_type == "assault_level_3_aggravated" ~  "Level 3 (Aggravated)",
-  )) |>
   ggplot(aes(year)) +
   geom_col(aes(y=assault_number,fill=assault_type),position="dodge") +
   theme(
@@ -183,54 +193,64 @@ Sexual assaults are "ranked" by three levels:
 
 ```{r}
   data |>
-    ggplot(aes(reorder(geography,sexual_assault_level_1),sexual_assault_level_1)) +
-    geom_col(aes(fill="Assaults",color="Assaults")) +
+    filter(sexual_assault_type=="Level 1") |>
+    ggplot(aes(reorder(geography,sexual_assault_number))) +
+    geom_col(aes(y=sexual_assault_number,color="Assaults",fill="Assaults")) +
+    coord_flip() +
     labs(
       title="Sexual Assaults (Level 1) by Region",
-      x = "Region",
-      y = "Sexual Assaults",
-      caption = "Data from Open Data Newfoundland and Labrador"
+      x="Region",
+      y="Assaults",
+      caption="Data from Open Data Newfoundland and Labrador",
     ) +
-    coord_flip() +
+    theme(
+      legend.position="none"
+    ) +
     scale_color_colorblind() +
-    scale_fill_colorblind() +
-    theme(legend.position="none")
+    scale_fill_colorblind()
 ```
 
 The **Northeast Avalon** region ranks first in terms of total number of sexual assaults (level 1).
 
 ```{r}
   data |>
-    ggplot(aes(reorder(geography,sexual_assault_level_2_with_a_weapon_or_bodily_harm),sexual_assault_level_2_with_a_weapon_or_bodily_harm)) +
-    geom_col(aes(fill="Assaults",color="Assaults"))+
+    filter(sexual_assault_type=="Level 2 (With a Weapon or Causing Bodily Harm)") |>
+    ggplot(aes(reorder(geography,sexual_assault_number))) +
+    geom_col(aes(y=sexual_assault_number,color="Assaults",fill="Assaults")) +
+    coord_flip() +
     labs(
       title="Sexual Assaults (Level 2) by Region",
-      x = "Region",
-      y = "Sexual Assaults",
-      caption = "Data from Open Data Newfoundland and Labrador"
+      x="Region",
+      y="Assaults",
+      caption="Data from Open Data Newfoundland and Labrador",
     ) +
-    coord_flip() +
+    theme(
+      legend.position="none"
+    ) +
     scale_color_colorblind() +
-    scale_fill_colorblind() +
-    theme(legend.position="none")
+    scale_fill_colorblind()
 ```
 
 Again, the **Northeast Avalon** leads in terms of sexual assaults (level 2), this time involving a weapon or bodily harm.
 
 ```{r}
   data |>
-    ggplot(aes(reorder(geography,sexual_assault_level_3_aggravated),sexual_assault_level_3_aggravated)) +
-    geom_col(aes(fill="Assaults",color="Assaults")) +
+    filter(sexual_assault_type=="Level 3 (Aggravated)") |>
+    ggplot(aes(reorder(geography,sexual_assault_number))) +
+    geom_col(aes(y=sexual_assault_number,color="Assaults",fill="Assaults")) +
+    coord_flip() +
     labs(
       title="Sexual Assaults (Level 3) by Region",
-      x = "Region",
-      y = "Sexual Assaults",
-      caption = "Data from Open Data Newfoundland and Labrador"
+      x="Region",
+      y="Assaults",
+      caption="Data from Open Data Newfoundland and Labrador",
     ) +
-    coord_flip() +
+    theme(
+      legend.position="none"
+    ) +
     scale_color_colorblind() +
     scale_fill_colorblind() +
-    theme(legend.position="none")
+    scale_y_continuous(breaks=pretty_breaks()) 
 ```
 
 The **Labrador District** experienced the greatest number of aggravated sexual assaults (level 3).
@@ -239,17 +259,6 @@ The **Labrador District** experienced the greatest number of aggravated sexual a
 
 ```{r}
   data |>
-  group_by(year) |>
-  pivot_longer(
-    cols = c(sexual_assault_level_1,sexual_assault_level_2_with_a_weapon_or_bodily_harm,sexual_assault_level_3_aggravated),
-    names_to = "sexual_assault_type",
-    values_to = "sexual_assault_number",
-  ) |>
-  mutate(sexual_assault_type = case_when(
-    sexual_assault_type == "sexual_assault_level_1" ~ "Level 1",
-    sexual_assault_type == "sexual_assault_level_2_with_a_weapon_or_bodily_harm" ~ "Level 2 (With a Weapon or Bodily Harm)",
-    sexual_assault_type == "sexual_assault_level_3_aggravated" ~  "Level 3 (Aggravated)",
-  )) |>
   ggplot(aes(year)) +
   geom_col(aes(y=sexual_assault_number,fill=sexual_assault_type),position="dodge") +
   theme(
@@ -290,34 +299,6 @@ The most common type of sexual assault across the province is **level 1.**
 ```
 
 The **Northeast Avalon** district experienced the most total sexual violations against children.
-
-## What types and amounts of sex crimes against children were experienced in the Northeast Avalon region?
-
-```{r}
-  data |>
-    group_by(year) |>
-    reframe(
-      luring_a_child_via_a_computer=sum(luring_a_child_via_a_computer),
-      child_pornography=sum(child_pornography),
-      ) |>
-    ggplot(aes(year)) +
-    geom_line(aes(y=luring_a_child_via_a_computer,color="Luring a Child Via Computer")) +
-    geom_line(aes(y=child_pornography,color="Child Pornography")) +
-    scale_x_continuous(breaks=seq(2006,2020,1)) +
-    labs(
-      title="Total Sexual Violations Against Children by Type",
-      subtitle="Newfoundland and Labrador",
-      x = "Year",
-      y = "Violations",
-      caption="Data from Open Data Newfoundland and Labrador",
-      colour="Legend",
-    ) +
-    scale_color_colorblind() +
-    scale_fill_colorblind() +
-    theme(legend.position="bottom")
-```
-
-These numbers do not account for the total sex crimes committed against children, but they do provide for a general impression of the types of crimes being committed.
 
 ## Is there a trend in sexual violations against children in the province?
 
