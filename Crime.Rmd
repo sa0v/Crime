@@ -444,7 +444,7 @@ Here again, we see that the **Northeast Avalon** dominates by a wide margin in t
 
 Again, we see that the **Northeast Avalon** region vastly outnumbers its neighbors in terms of shoplifting incidents, even when those incidents involve much more expensive property.
 
-## Is this part of a greater trend for the province?
+## Is the number of thefts from motor vehicles above $5,000 increasing or decreasing across the province?
 
 ```{r}
   data |>
@@ -465,7 +465,7 @@ Again, we see that the **Northeast Avalon** region vastly outnumbers its neighbo
 
 The number of major shoplifting incidents in the province is clearly **increasing** over time.
 
-## Motor vehicle thefts
+## How do the number of motor vehicle thefts vary by region?
 
 For the purposes of studying motor vehicle thefts, only the theft of the vehicle, not the vehicle's cost, will be considered.
 
@@ -487,7 +487,7 @@ For the purposes of studying motor vehicle thefts, only the theft of the vehicle
 
 The **Northeast Avalon** region experienced the largest total number of motor vehicle thefts. 
 
-## What about trend in motor vehicle thefts over time for the province?
+## Is there a trend in total motor vehicle thefts across the province?
 
 ```{r}
   data |>
@@ -506,7 +506,7 @@ The **Northeast Avalon** region experienced the largest total number of motor ve
     )
 ```
 
-The number of total motor vehicle thefts is trending **downward** over time.
+The total number of motor vehicle thefts appears to be **decreasing** over time across the province.
 
 ## Is theft from motor vehicles more common below or above $5,000?
 
