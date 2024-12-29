@@ -69,7 +69,16 @@ output:
   mutate(motor_vehicle_theft_type = case_when(
     motor_vehicle_theft_type == "theft_5_000_or_under_from_a_motor_vehicle" ~ "$5,000 or Under",
     motor_vehicle_theft_type == "theft_over_5_000_from_a_motor_vehicle" ~ "Over $5,000"
-  ))
+  )) |>
+  pivot_longer(
+      cols=c(impaired_operation_causing_bodily_harm,impaired_operation_causing_death),
+      names_to = "impaired_operation_type",
+      values_to = "impaired_operation_number",
+    ) |>
+    mutate(impaired_operation_type=case_when(
+      impaired_operation_type == "impaired_operation_causing_bodily_harm" ~ "Causing Bodily Harm",
+      impaired_operation_type == "impaired_operation_causing_death" ~ "Causing Death"
+    ))  
 ```
 
 This [RStudio](https://resources.rstudio.com/categories/rstudio-ide/) notebook studies crime in Newfoundland and Labrador over a 14 year period, using a data set made available by **Open Data Newfoundland and Labrador** on their website.
@@ -212,6 +221,8 @@ Sexual assaults are "ranked" by three levels:
   data |>
     distinct(geography,year,sexual_assault_type,.keep_all=TRUE) |>
     filter(sexual_assault_type=="Level 1") |>
+    group_by(year) |>
+    
     ggplot(aes(reorder(geography,sexual_assault_number))) +
     geom_col(aes(y=sexual_assault_number,color="Assaults",fill="Assaults")) +
     coord_flip() +
@@ -1189,25 +1200,25 @@ There is a definite **increase** in the number of impaired driving charges over 
 
 ```{r}
   data |>
-    distinct(geography,year,.keep_all=TRUE) |>
-    group_by(year) |>
-    reframe(
-      impaired_operation_causing_bodily_harm=sum(impaired_operation_causing_bodily_harm),
-      impaired_operation_causing_death=sum(impaired_operation_causing_death)) |>
+    distinct(geography,year,impaired_operation_type,.keep_all=TRUE) |>
     ggplot(aes(year)) +
-    geom_line(aes(y=impaired_operation_causing_bodily_harm,color="Bodily Harm")) +
-    geom_line(aes(y=impaired_operation_causing_death,color="Death")) +
-    scale_x_continuous(breaks=seq(2006,2020,1)) +
-    labs(
-      title="Total Impaired Operation Causing Bodily Harm and Death",
-      subtitle="Newfoundland and Labrador",
-      x = "Year",
-      y = "Charges",
-      caption="Data from Open Data Newfoundland and Labrador",
-      color="Legend"
-    ) +
-    scale_color_colorblind() +
-    scale_fill_colorblind()
+    geom_col(aes(y=impaired_operation_number,color=impaired_operation_type,fill=impaired_operation_type),position="dodge") +
+  theme(
+    legend.position="bottom"
+  ) +
+  scale_x_continuous(breaks=seq(2006,2020,1)) +
+  labs(
+    title="Total Impaired Driving Incidents By Type",
+    x="Year",
+    y="Incidents",
+    fill="Legend",
+    caption="Data from Open Data Newfoundland and Labrador",
+  ) +
+  guides(
+    color="none"
+  ) +
+  scale_color_colorblind() +
+  scale_fill_colorblind()
 ```
 
 Thankfully, the number of impaired driving incidents in Newfoundland and Labrador that result in injury or death remain relatively low, compared to the number of impaired drivers on the road.
