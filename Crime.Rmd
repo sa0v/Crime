@@ -105,6 +105,7 @@ This is the case for one region of the province, however. What about for the pro
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
     summarize(total_violent_criminal_code_violations=sum(total_violent_criminal_code_violations)) |>
     ggplot(aes(year,total_violent_criminal_code_violations)) +
@@ -324,6 +325,7 @@ The **Northeast Avalon** district experienced the most total sexual violations a
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
     summarize(total_sexual_violations_against_children=sum(total_sexual_violations_against_children)) |>
     ggplot(aes(year,total_sexual_violations_against_children)) +
@@ -410,6 +412,7 @@ We see in this case that the **Northeast Avalon** experienced the most robberies
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
     summarize(total_robbery=sum(total_robbery)) |>
     ggplot(aes(year,total_robbery)) +
@@ -473,6 +476,7 @@ Again, we see that the **Northeast Avalon** region vastly outnumbers its neighbo
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
     summarize(shoplifting_over_5_000=sum(shoplifting_over_5_000)) |>
     ggplot(aes(year,shoplifting_over_5_000)) +
@@ -517,6 +521,7 @@ The **Northeast Avalon** region experienced the largest total number of motor ve
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
     summarize(total_theft_of_motor_vehicle=sum(total_theft_of_motor_vehicle)) |>
     ggplot(aes(year,total_theft_of_motor_vehicle)) +
@@ -567,6 +572,7 @@ For thefts from motor vehicles below $5,000:
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
     filter(motor_vehicle_theft_type=="$5,000 or Under") |>
     summarize(motor_vehicle_theft_amount=sum(motor_vehicle_theft_amount)) |>
@@ -587,6 +593,7 @@ Thefts from motor vehicles below \$5,000 are clearly **decreasing** with time. W
 
 ```{r}
   data |>
+    distinct(geography,year,motor_vehicle_theft_type,.keep_all=TRUE) |>
     group_by(year) |>
     filter(motor_vehicle_theft_type=="Over $5,000") |>
     summarize(motor_vehicle_theft_amount=sum(motor_vehicle_theft_amount)) |>
@@ -631,6 +638,7 @@ The **Northeast Avalon** region vastly outstrips the other regions in terms of f
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
     summarize(total_firearms_use_of_discharge_pointing=sum(total_firearms_use_of_discharge_pointing)) |>
     ggplot(aes(year,total_firearms_use_of_discharge_pointing)) +
@@ -674,6 +682,7 @@ Once again, we see that the **Northeast Avalon** ranks first, this time in terms
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
     summarize(total_weapons_violations=sum(total_weapons_violations)) |>
     ggplot(aes(year,total_weapons_violations)) +
@@ -715,6 +724,7 @@ The **Northeast Avalon** region leads in terms of charges for weapons possession
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
     summarize(possession_of_weapons=sum(possession_of_weapons)) |>
     ggplot(aes(year,possession_of_weapons)) +
@@ -803,6 +813,7 @@ Once again, the **Northeast Avalon** dominates in terms of total incidents, this
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
     summarize(criminal_harassment=sum(criminal_harassment)) |>
     ggplot(aes(year,criminal_harassment)) +
@@ -891,6 +902,7 @@ Identity theft and fraud were introduced as violation codes in January of 2010, 
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
     filter(year >= 2010) |>
     summarize(identity_theft=sum(identity_theft)) |>
@@ -936,6 +948,7 @@ Again, since identity fraud as a violation code was only introduced in 2010, in 
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
     filter(year >= 2010) |>
     summarize(identity_fraud=sum(identity_fraud)) |>
@@ -979,6 +992,7 @@ The most charges for counterfeiting were laid in the **Northeast Avalon** region
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
     filter(year >= 2010) |>
     summarize(identity_fraud=sum(identity_fraud)) |>
@@ -1022,6 +1036,7 @@ The **Northeast Avalon** region leads in terms of total property crime violation
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
     summarize(total_property_crime_violations=sum(total_property_crime_violations)) |>
     ggplot(aes(year,total_property_crime_violations)) +
@@ -1064,6 +1079,7 @@ The **Northeast Avalon** region vastly outstrips its neighbors in terms of break
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
     summarize(total_breaking_and_entering=sum(total_breaking_and_entering)) |>
     ggplot(aes(year,total_breaking_and_entering)) +
@@ -1106,6 +1122,7 @@ We see that the **Northeast Avalon** region leads in total incidents of arson.
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
     summarize(arson=sum(arson)) |>
     ggplot(aes(year,arson)) +
@@ -1150,6 +1167,7 @@ The **Northeast Avalon** leads in terms of total impaired driving charges.
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all = TRUE) |>
     group_by(year) |>
     summarize(total_impaired_driving=sum(total_impaired_driving)) |>
     ggplot(aes(year,total_impaired_driving)) +
@@ -1219,7 +1237,8 @@ The **Northeast Avalon** leads in terms of drivers who are arrested while drivin
 
 ```{r}
   data |>
-    group_by(year) |>
+    distinct(geography,year,.keep_all=TRUE) |>
+    group_by(year) |> 
     summarize(driving_while_prohibited=sum(driving_while_prohibited)) |>
     ggplot(aes(year,driving_while_prohibited)) +
     geom_line() +
@@ -1263,6 +1282,7 @@ The **Northeast Avalon** is the leader in terms of arrests for cannabis possessi
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
     summarize(posession_cannabis=sum(posession_cannabis)) |>
     ggplot(aes(year,posession_cannabis)) +
@@ -1305,6 +1325,7 @@ The **Northeast Avalon** region ranks first in terms of arrests for cocaine poss
 
 ```{r}
   data |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
     summarize(possession_cocaine=sum(possession_cocaine)) |>
     ggplot(aes(year,possession_cocaine)) +
