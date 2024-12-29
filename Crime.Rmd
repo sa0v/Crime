@@ -1210,7 +1210,7 @@ There is a definite **increase** in the number of impaired driving charges over 
   labs(
     title="Total Impaired Driving Incidents By Type",
     x="Year",
-    y="Incidents",
+    y="Charges",
     fill="Legend",
     caption="Data from Open Data Newfoundland and Labrador",
   ) +
