@@ -336,7 +336,7 @@ The **Northeast Avalon** district experienced the most total sexual violations a
       title="Total Sexual Violations Against Children",
       subtitle="Newfoundland and Labrador",
       x = "Year",
-      y = "Incidents",
+      y = "Violations",
       caption="Data from Open Data Newfoundland and Labrador"
     )
 ```
