@@ -1208,7 +1208,7 @@ There is a definite **increase** in the number of impaired driving charges over 
   ) +
   scale_x_continuous(breaks=seq(2006,2020,1)) +
   labs(
-    title="Total Impaired Driving Charges By Type",
+    title="Impaired Driving Charges By Type",
     x="Year",
     y="Charges",
     fill="Legend",
