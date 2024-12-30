@@ -187,7 +187,7 @@ Assaults are ranked on a scale. There are three levels:
 ```{r}
   data |>
   ggplot(aes(year)) +
-  geom_col(aes(y=assault_number,fill=assault_type),position="dodge") +
+  geom_col(aes(y=assault_number,fill=assault_type),position=position_dodge(1)) +
   theme(
     legend.position="bottom"
   ) +
@@ -291,7 +291,7 @@ The **Labrador District** experienced the greatest number of aggravated sexual a
 ```{r}
   data |>
   ggplot(aes(year)) +
-  geom_col(aes(y=sexual_assault_number,fill=sexual_assault_type),position="dodge") +
+  geom_col(aes(y=sexual_assault_number,fill=sexual_assault_type),position=position_dodge(1)) +
   theme(
     legend.position="bottom"
   ) +
@@ -556,7 +556,7 @@ The total number of motor vehicle thefts appears to be **decreasing** over time 
   data |>
   distinct(geography,year,motor_vehicle_theft_type,.keep_all=TRUE) |>
   ggplot(aes(year)) +
-  geom_col(aes(fill=motor_vehicle_theft_type,y=motor_vehicle_theft_amount),position="dodge") +
+  geom_col(aes(fill=motor_vehicle_theft_type,y=motor_vehicle_theft_amount),position=position_dodge(1)) +
   guides(
     guides(fill=guide_legend(nrow=3,byrow=TRUE))
   ) +
@@ -1202,7 +1202,7 @@ There is a definite **increase** in the number of impaired driving charges over 
 ```{r}
   data |>
     ggplot(aes(year)) +
-    geom_col(aes(y=impaired_operation_number,color=impaired_operation_type,fill=impaired_operation_type),position="dodge") +
+    geom_col(aes(y=impaired_operation_number,color=impaired_operation_type,fill=impaired_operation_type),position=position_dodge(1)) +
   theme(
     legend.position="bottom"
   ) +
