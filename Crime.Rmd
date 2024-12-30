@@ -6,79 +6,101 @@ output:
 ---
 
 ```{r}
-  library(tidyverse)
-  library(janitor)
-  library(ggthemes)
-  library(scales)
+library(tidyverse)
+library(janitor)
+library(ggthemes)
+library(scales)
 
-  # Disable the display of scientific notation.
-  options(scipen=999)
+# Disable the display of scientific notation.
+options(scipen = 999)
 
-  data <- read.csv("https://opendata.gov.nl.ca/public/opendata/filedownload/?file-id=17253")
+data <- read.csv("https://opendata.gov.nl.ca/public/opendata/filedownload/?file-id=17253")
 
-  data <- data|>
-    janitor::clean_names() |>
-    mutate(geography=factor(geography)) |>
-    # Focus upon actual incidents of crime.
-    filter(data_type=="actual_incidents") |>
-    # We will restrict our area of study to the police regions of Newfoundland
-    # and Labrador.
-    filter(
-      geography != "Yukon",
-      geography != "Saskatchewan",
-      geography != "Quebec",
-      geography != "Prince Edward Island",
-      geography != "Ontario",
-      geography != "Nunavut",
-      geography != "Northwest Territories",
-      geography != "New Brunswick",
-      geography != "Manitoba",
-      geography != "Canada",
-      geography != "British Columbia",
-      geography != "Alberta",
-      geography != "Nova Scotia",
-      geography != "Newfoundland and Labrador",
-    ) |>
-    select(!c('geography_type','geography_note','data_type')) |>
-    mutate(geography = str_replace(geography,"Northeast Avalon R.N.C","Northeast Avalon, R.N.C.")) |>
-    pivot_longer(
-    cols = c(assault_level_1,assault_level_2_with_weapon_or_causing_bodily_harm,assault_level_3_aggravated),
+data <- data |>
+  janitor::clean_names() |>
+  mutate(geography = factor(geography)) |>
+  # Focus upon actual incidents of crime.
+  filter(data_type == "actual_incidents") |>
+  # We will restrict our area of study to the police regions of Newfoundland
+  # and Labrador.
+  filter(
+    geography != "Yukon",
+    geography != "Saskatchewan",
+    geography != "Quebec",
+    geography != "Prince Edward Island",
+    geography != "Ontario",
+    geography != "Nunavut",
+    geography != "Northwest Territories",
+    geography != "New Brunswick",
+    geography != "Manitoba",
+    geography != "Canada",
+    geography != "British Columbia",
+    geography != "Alberta",
+    geography != "Nova Scotia",
+    geography != "Newfoundland and Labrador",
+  ) |>
+  select(!c('geography_type', 'geography_note', 'data_type')) |>
+  mutate(geography = str_replace(geography, "Northeast Avalon R.N.C", "Northeast Avalon, R.N.C.")) |>
+  pivot_longer(
+    cols = c(
+      assault_level_1,
+      assault_level_2_with_weapon_or_causing_bodily_harm,
+      assault_level_3_aggravated
+    ),
     names_to = "assault_type",
     values_to = "assault_number",
   ) |>
-  mutate(assault_type = case_when(
-    assault_type == "assault_level_1" ~ "Level 1",
-    assault_type == "assault_level_2_with_weapon_or_causing_bodily_harm" ~ "Level 2 (With a Weapon or Causing Bodily Harm)",
-    assault_type == "assault_level_3_aggravated" ~  "Level 3 (Aggravated)",
-  )) |>
-    pivot_longer(
-    cols = c(sexual_assault_level_1,sexual_assault_level_2_with_a_weapon_or_bodily_harm,sexual_assault_level_3_aggravated),
+  mutate(
+    assault_type = case_when(
+      assault_type == "assault_level_1" ~ "Level 1",
+      assault_type == "assault_level_2_with_weapon_or_causing_bodily_harm" ~ "Level 2 (With a Weapon or Causing Bodily Harm)",
+      assault_type == "assault_level_3_aggravated" ~  "Level 3 (Aggravated)",
+    )
+  ) |>
+  pivot_longer(
+    cols = c(
+      sexual_assault_level_1,
+      sexual_assault_level_2_with_a_weapon_or_bodily_harm,
+      sexual_assault_level_3_aggravated
+    ),
     names_to = "sexual_assault_type",
     values_to = "sexual_assault_number",
   ) |>
-  mutate(sexual_assault_type = case_when(
-    sexual_assault_type == "sexual_assault_level_1" ~ "Level 1",
-    sexual_assault_type == "sexual_assault_level_2_with_a_weapon_or_bodily_harm" ~ "Level 2 (With a Weapon or Causing Bodily Harm)",
-    sexual_assault_type == "sexual_assault_level_3_aggravated" ~  "Level 3 (Aggravated)",
-  )) |>
-  pivot_longer(
-    cols=c(theft_5_000_or_under_from_a_motor_vehicle,theft_over_5_000_from_a_motor_vehicle),
-    names_to="motor_vehicle_theft_type",
-    values_to="motor_vehicle_theft_amount",
+  mutate(
+    sexual_assault_type = case_when(
+      sexual_assault_type == "sexual_assault_level_1" ~ "Level 1",
+      sexual_assault_type == "sexual_assault_level_2_with_a_weapon_or_bodily_harm" ~ "Level 2 (With a Weapon or Causing Bodily Harm)",
+      sexual_assault_type == "sexual_assault_level_3_aggravated" ~  "Level 3 (Aggravated)",
+    )
   ) |>
-  mutate(motor_vehicle_theft_type = case_when(
-    motor_vehicle_theft_type == "theft_5_000_or_under_from_a_motor_vehicle" ~ "$5,000 or Under",
-    motor_vehicle_theft_type == "theft_over_5_000_from_a_motor_vehicle" ~ "Over $5,000"
-  )) |>
   pivot_longer(
-      cols=c(impaired_operation_causing_bodily_harm,impaired_operation_causing_death),
-      names_to = "impaired_operation_type",
-      values_to = "impaired_operation_number",
-    ) |>
-    mutate(impaired_operation_type=case_when(
+    cols = c(
+      theft_5_000_or_under_from_a_motor_vehicle,
+      theft_over_5_000_from_a_motor_vehicle
+    ),
+    names_to = "motor_vehicle_theft_type",
+    values_to = "motor_vehicle_theft_amount",
+  ) |>
+  mutate(
+    motor_vehicle_theft_type = case_when(
+      motor_vehicle_theft_type == "theft_5_000_or_under_from_a_motor_vehicle" ~ "$5,000 or Under",
+      motor_vehicle_theft_type == "theft_over_5_000_from_a_motor_vehicle" ~ "Over $5,000"
+    )
+  ) |>
+  pivot_longer(
+    cols = c(
+      impaired_operation_causing_bodily_harm,
+      impaired_operation_causing_death
+    ),
+    names_to = "impaired_operation_type",
+    values_to = "impaired_operation_number",
+  ) |>
+  mutate(
+    impaired_operation_type = case_when(
       impaired_operation_type == "impaired_operation_causing_bodily_harm" ~ "Causing Bodily Harm",
       impaired_operation_type == "impaired_operation_causing_death" ~ "Causing Death"
-    ))  
+    )
+  )  
 ```
 
 This [RStudio](https://resources.rstudio.com/categories/rstudio-ide/) notebook studies crime in Newfoundland and Labrador over a 14 year period, using a data set made available by **Open Data Newfoundland and Labrador** on their website.
