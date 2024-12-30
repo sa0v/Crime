@@ -1181,6 +1181,53 @@ We see that the **Northeast Avalon** region leads in total incidents of arson.
 
 The number of incidents of arson is clearly trending **downward** across the province.
 
+## How do charges of possession of stolen property vary by region?
+
+```{r}
+  title <- "Total Charges of Possession of Stolen Property By Region" |>
+  str_wrap(50)
+
+  data |>
+  distinct(geography,year,.keep_all=TRUE) |>
+  ggplot(aes(x=reorder(geography,possession_of_stolen_property))) +
+  geom_col(aes(y=possession_of_stolen_property,fill="Charges",color="Charges")) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind() +
+  labs(
+    title=title,
+    x="Region",
+    y="Charges",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  coord_flip()
+```
+
+The **Northeast Avalon** region is first in terms of the number of charges of stolen property laid.
+
+## Is there a trend in the number of charges of possession of stolen property across the province?
+
+```{r}
+  data |>
+    distinct(geography,year,.keep_all=TRUE) |>
+    group_by(year) |>
+    summarize(possession_of_stolen_property=sum(possession_of_stolen_property)) |>
+    ggplot(aes(year,possession_of_stolen_property)) +
+    geom_line() +
+    geom_smooth(se=FALSE,method="lm") +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Charges of Possession of Stolen Property",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Incidents",
+      caption="Data from Open Data Newfoundland and Labrador"
+    )
+```
+
+Across the province, charges of possession of stolen property are **decreasing** over time.
+
 # On the Road
 
 ## How do the incidents of impaired driving vary by region?
