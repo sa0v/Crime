@@ -441,7 +441,7 @@ We see in this case that the **Northeast Avalon** experienced the most robberies
 
 There has been a clear, **positive** trend in the number of robberies over time.
 
-## How did the various regions vary in terms of shoplifting incidents?
+## How do the regions vary in terms of shoplifting incidents?
 
 ```{r}
   data |>
