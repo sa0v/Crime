@@ -554,7 +554,6 @@ The total number of motor vehicle thefts appears to be **decreasing** over time 
 
 ```{r}
   data |>
-  distinct(geography,year,motor_vehicle_theft_type,.keep_all=TRUE) |>
   ggplot(aes(year)) +
   geom_col(aes(fill=motor_vehicle_theft_type,y=motor_vehicle_theft_amount),position=position_dodge(1)) +
   guides(
