@@ -1209,6 +1209,7 @@ There is a definite **increase** in the number of impaired driving charges over 
   scale_x_continuous(breaks=seq(2006,2020,1)) +
   labs(
     title="Impaired Driving Charges By Type",
+    subtitle="Newfoundland and Labrador",
     x="Year",
     y="Charges",
     fill="Legend",
