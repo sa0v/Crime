@@ -284,7 +284,7 @@ The **Labrador District** experienced the greatest number of aggravated sexual a
     color="none",
     fill=guide_legend(nrow=1,byrow=TRUE)
   ) + labs(
-    title="Total Assaults By Type",
+    title="Total Sexual Assaults By Type",
     subtitle="Newfoundland and Labrador",
     x="Year",
     y="Assaults",
