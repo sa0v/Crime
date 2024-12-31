@@ -408,7 +408,7 @@ The majority of crimes involving indecent acts were committed in the **Northeast
     coord_flip()
 ```
 
-We see in this case that the **Northeast Avalon** experienced the most robberies over time; in fact, the region outstrips the others by a wide margin in terms of this form of crime.
+We see in this case that the **Northeast Avalon** region experienced the most robberies over time by a wide margin.
 
 ## Is there a trend in the number of robberies in the province?
 
