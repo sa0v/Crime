@@ -262,21 +262,21 @@ The **Labrador District** experienced the greatest number of aggravated sexual a
   distinct(geography,year,.keep_all=TRUE) |>
   group_by(year) |>
   reframe(
-    assault_level_1=sum(assault_level_1),
-    assault_level_2_with_weapon_or_causing_bodily_harm=sum(assault_level_2_with_weapon_or_causing_bodily_harm),
-    assault_level_3_aggravated=sum(assault_level_3_aggravated)
+    sexual_assault_level_1=sum(sexual_assault_level_1),
+    sexual_assault_level_2_with_a_weapon_or_bodily_harm=sum(sexual_assault_level_2_with_a_weapon_or_bodily_harm),
+    sexual_assault_level_3_aggravated=sum(sexual_assault_level_3_aggravated)
   ) |>
   pivot_longer(
-    cols=c(assault_level_1,assault_level_2_with_weapon_or_causing_bodily_harm,assault_level_3_aggravated),
-    names_to="assault_type",
-    values_to="assault_number"
+    cols=c(sexual_assault_level_1,sexual_assault_level_2_with_a_weapon_or_bodily_harm,sexual_assault_level_3_aggravated),
+    names_to="sexual_assault_type",
+    values_to="sexual_assault_number"
   ) |>
-  mutate(assault_type=str_replace(assault_type,"assault_level_1","Level 1")) |>
-  mutate(assault_type=str_replace(assault_type,"assault_level_2_with_weapon_or_causing_bodily_harm","Level 2")) |>
-  mutate(assault_type=str_replace(assault_type,"assault_level_3_aggravated","Level 3")) |>
+  mutate(sexual_assault_type=str_replace(sexual_assault_type,"sexual_assault_level_1","Level 1")) |>
+  mutate(sexual_assault_type=str_replace(sexual_assault_type,"sexual_assault_level_2_with_a_weapon_or_bodily_harm","Level 2")) |>
+  mutate(sexual_assault_type=str_replace(sexual_assault_type,"sexual_assault_level_3_aggravated","Level 3")) |>
   ggplot(aes(year)) +
   
-  geom_col(aes(y=assault_number,color=assault_type,fill=assault_type),position="dodge2") +
+  geom_col(aes(y=sexual_assault_number,color=sexual_assault_type,fill=sexual_assault_type),position="dodge2") +
   theme(
     legend.position="bottom"
   ) +
@@ -284,7 +284,7 @@ The **Labrador District** experienced the greatest number of aggravated sexual a
     color="none",
     fill=guide_legend(nrow=1,byrow=TRUE)
   ) + labs(
-    title="Total Assaults By Type",
+    title="Total Sexual Assaults By Type",
     subtitle="Newfoundland and Labrador",
     x="Year",
     y="Assaults",
