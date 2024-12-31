@@ -40,51 +40,7 @@ data <- data |>
     geography != "Newfoundland and Labrador",
   ) |>
   select(!c('geography_type', 'geography_note', 'data_type')) |>
-  mutate(geography = str_replace(geography, "Northeast Avalon R.N.C", "Northeast Avalon, R.N.C.")) |>
-  pivot_longer(
-    cols = c(
-      sexual_assault_level_1,
-      sexual_assault_level_2_with_a_weapon_or_bodily_harm,
-      sexual_assault_level_3_aggravated
-    ),
-    names_to = "sexual_assault_type",
-    values_to = "sexual_assault_number",
-  ) |>
-  mutate(
-    sexual_assault_type = case_when(
-      sexual_assault_type == "sexual_assault_level_1" ~ "Level 1",
-      sexual_assault_type == "sexual_assault_level_2_with_a_weapon_or_bodily_harm" ~ "Level 2 (With a Weapon or Causing Bodily Harm)",
-      sexual_assault_type == "sexual_assault_level_3_aggravated" ~  "Level 3 (Aggravated)",
-    )
-  ) |>
-  pivot_longer(
-    cols = c(
-      theft_5_000_or_under_from_a_motor_vehicle,
-      theft_over_5_000_from_a_motor_vehicle
-    ),
-    names_to = "motor_vehicle_theft_type",
-    values_to = "motor_vehicle_theft_amount",
-  ) |>
-  mutate(
-    motor_vehicle_theft_type = case_when(
-      motor_vehicle_theft_type == "theft_5_000_or_under_from_a_motor_vehicle" ~ "$5,000 or Under",
-      motor_vehicle_theft_type == "theft_over_5_000_from_a_motor_vehicle" ~ "Over $5,000"
-    )
-  ) |>
-  pivot_longer(
-    cols = c(
-      impaired_operation_causing_bodily_harm,
-      impaired_operation_causing_death
-    ),
-    names_to = "impaired_operation_type",
-    values_to = "impaired_operation_number",
-  ) |>
-  mutate(
-    impaired_operation_type = case_when(
-      impaired_operation_type == "impaired_operation_causing_bodily_harm" ~ "Causing Bodily Harm",
-      impaired_operation_type == "impaired_operation_causing_death" ~ "Causing Death"
-    )
-  )  
+  mutate(geography = str_replace(geography, "Northeast Avalon R.N.C", "Northeast Avalon, R.N.C."))
 ```
 
 This [RStudio](https://resources.rstudio.com/categories/rstudio-ide/) notebook studies crime in Newfoundland and Labrador over a 14 year period, using a data set made available by **Open Data Newfoundland and Labrador** on their website.
@@ -243,73 +199,58 @@ Sexual assaults are "ranked" by three levels:
 - level 3 (aggravated).
 
 ```{r}
-  data |>
-    distinct(geography,year,sexual_assault_type,.keep_all=TRUE) |>
-    filter(sexual_assault_type=="Level 1") |>
-    group_by(year) |>
-    
-    ggplot(aes(reorder(geography,sexual_assault_number))) +
-    geom_col(aes(y=sexual_assault_number,color="Assaults",fill="Assaults")) +
-    coord_flip() +
-    labs(
-      title="Total Sexual Assaults (Level 1) By Region",
-      x="Region",
-      y="Assaults",
-      caption="Data from Open Data Newfoundland and Labrador",
-      subtitle="Newfoundland and Labrador (2006-2020)"
-    ) +
-    theme(
-      legend.position="none"
-    ) +
-    scale_color_colorblind() +
-    scale_fill_colorblind()
+data |>
+  ggplot(aes(reorder(geography,sexual_assault_level_1),sexual_assault_level_1)) +
+  geom_col(aes(color="Assaults",fill="Assaults")) +
+  coord_flip() +
+  labs(
+    title="Total Sexual Assaults (Level 1) By Region",
+    x="Region",
+    y="Assaults",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind()
 ```
 
 The **Northeast Avalon** region ranks first in terms of total number of sexual assaults (level 1).
 
 ```{r}
-  data |>
-    distinct(geography,year,sexual_assault_type,.keep_all=TRUE) |>
-    filter(sexual_assault_type=="Level 2 (With a Weapon or Causing Bodily Harm)") |>
-    ggplot(aes(reorder(geography,sexual_assault_number))) +
-    geom_col(aes(y=sexual_assault_number,color="Assaults",fill="Assaults")) +
-    coord_flip() +
-    labs(
-      title="Total Sexual Assaults (Level 2) By Region",
-      x="Region",
-      y="Assaults",
-      caption="Data from Open Data Newfoundland and Labrador",
-      subtitle="Newfoundland and Labrador (2006-2020)"
-    ) +
-    theme(
-      legend.position="none"
-    ) +
-    scale_color_colorblind() +
-    scale_fill_colorblind()
+data |>
+  ggplot(aes(reorder(geography,sexual_assault_level_2_with_a_weapon_or_bodily_harm),sexual_assault_level_2_with_a_weapon_or_bodily_harm)) +
+  geom_col(aes(color="Assaults",fill="Assaults")) +
+  coord_flip() +
+  labs(
+    title="Total Sexual Assaults (Level 2) By Region",
+    x="Region",
+    y="Assaults",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind()
 ```
 
 Again, the **Northeast Avalon** leads in terms of sexual assaults (level 2), this time involving a weapon or bodily harm.
 
 ```{r}
-  data |>
-    distinct(geography,year,sexual_assault_type,.keep_all=TRUE) |>
-    filter(sexual_assault_type=="Level 3 (Aggravated)") |>
-    ggplot(aes(reorder(geography,sexual_assault_number))) +
-    geom_col(aes(y=sexual_assault_number,color="Assaults",fill="Assaults")) +
-    coord_flip() +
-    labs(
-      title="Total Sexual Assaults (Level 3) By Region",
-      x="Region",
-      y="Assaults",
-      caption="Data from Open Data Newfoundland and Labrador",
-      subtitle="Newfoundland and Labrador (2006-2020)"
-    ) +
-    theme(
-      legend.position="none"
-    ) +
-    scale_color_colorblind() +
-    scale_fill_colorblind() +
-    scale_y_continuous(breaks=breaks_pretty()) 
+data |>
+  ggplot(aes(reorder(geography,sexual_assault_level_3_aggravated),sexual_assault_level_3_aggravated)) +
+  geom_col(aes(color="Assaults",fill="Assaults")) +
+  coord_flip() +
+  labs(
+    title="Total Sexual Assaults (Level 3) By Region",
+    x="Region",
+    y="Assaults",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind()
 ```
 
 The **Labrador District** experienced the greatest number of aggravated sexual assaults (level 3).
@@ -318,22 +259,40 @@ The **Labrador District** experienced the greatest number of aggravated sexual a
 
 ```{r}
   data |>
+  distinct(geography,year,.keep_all=TRUE) |>
+  group_by(year) |>
+  reframe(
+    assault_level_1=sum(assault_level_1),
+    assault_level_2_with_weapon_or_causing_bodily_harm=sum(assault_level_2_with_weapon_or_causing_bodily_harm),
+    assault_level_3_aggravated=sum(assault_level_3_aggravated)
+  ) |>
+  pivot_longer(
+    cols=c(assault_level_1,assault_level_2_with_weapon_or_causing_bodily_harm,assault_level_3_aggravated),
+    names_to="assault_type",
+    values_to="assault_number"
+  ) |>
+  mutate(assault_type=str_replace(assault_type,"assault_level_1","Level 1")) |>
+  mutate(assault_type=str_replace(assault_type,"assault_level_2_with_weapon_or_causing_bodily_harm","Level 2")) |>
+  mutate(assault_type=str_replace(assault_type,"assault_level_3_aggravated","Level 3")) |>
   ggplot(aes(year)) +
-  geom_col(aes(y=sexual_assault_number,fill=sexual_assault_type),position=position_dodge(1)) +
+  
+  geom_col(aes(y=assault_number,color=assault_type,fill=assault_type),position="dodge2") +
   theme(
     legend.position="bottom"
   ) +
-  scale_x_continuous(breaks=seq(2006,2020,1)) +
-  guides(fill=guide_legend(nrow=3,byrow=TRUE)) + 
-  labs(
-    title="Total Sexual Assaults By Type",
+  guides(
+    color="none",
+    fill=guide_legend(nrow=1,byrow=TRUE)
+  ) + labs(
+    title="Total Assaults By Type",
     subtitle="Newfoundland and Labrador",
     x="Year",
     y="Assaults",
-    fill="Legend",
     caption="Data from Open Data Newfoundland and Labrador",
+    fill="Legend",
   ) +
-  scale_color_colorblind() +
+  scale_x_continuous(breaks=seq(2006,2020,1)) +
+  scale_color_colorblind() + 
   scale_fill_colorblind()
 ```
 
@@ -589,6 +548,18 @@ The total number of motor vehicle thefts appears to be **decreasing** over time 
 
 ```{r}
   data |>
+  group_by(year) |>
+  reframe(
+   theft_5_000_or_under_from_a_motor_vehicle=sum(theft_5_000_or_under_from_a_motor_vehicle),
+   theft_over_5_000_from_a_motor_vehicle=sum(theft_over_5_000_from_a_motor_vehicle)
+ ) |>
+  pivot_longer(
+    cols=c(theft_5_000_or_under_from_a_motor_vehicle,theft_over_5_000_from_a_motor_vehicle),
+    names_to = "motor_vehicle_theft_type",
+    values_to = "motor_vehicle_theft_amount", 
+  ) |>
+  mutate(motor_vehicle_theft_type=str_replace(motor_vehicle_theft_type,"theft_5_000_or_under_from_a_motor_vehicle","$5,000 or Under")) |>
+  mutate(motor_vehicle_theft_type=str_replace(motor_vehicle_theft_type,"theft_over_5_000_from_a_motor_vehicle","Over $5,000")) |>
   ggplot(aes(year)) +
   geom_col(aes(fill=motor_vehicle_theft_type,y=motor_vehicle_theft_amount),position=position_dodge(1)) +
   guides(
@@ -597,7 +568,7 @@ The total number of motor vehicle thefts appears to be **decreasing** over time 
   scale_color_colorblind() +
   scale_fill_colorblind() +
   labs(
-    title="Total Motor Vehicle Thefts By Type",
+    title="Total Thefts From Motor Vehicles By Type",
     x="Year",
     y="Thefts",
     fill="Legend",
@@ -620,40 +591,36 @@ For thefts from motor vehicles below $5,000:
   data |>
     distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
-    filter(motor_vehicle_theft_type=="$5,000 or Under") |>
-    summarize(motor_vehicle_theft_amount=sum(motor_vehicle_theft_amount)) |>
-    ggplot(aes(year,motor_vehicle_theft_amount)) +
-    geom_line() +
-    geom_smooth(se=FALSE,method="lm") +
-    scale_x_continuous(breaks=seq(2006,2020,1)) +
-    labs(
-      title="Total Theft from Motor Vehicles ($5,000 or Under)",
-      subtitle="Newfoundland and Labrador",
-      x = "Year",
-      y = "Incidents",
-      caption="Data from Open Data Newfoundland and Labrador"
-    )
+    summarize(theft_5_000_or_under_from_a_motor_vehicle=sum(theft_5_000_or_under_from_a_motor_vehicle)) |>
+    ggplot(aes(year)) +
+    geom_line(aes(y=theft_5_000_or_under_from_a_motor_vehicle)) +
+    geom_smooth(aes(y=theft_5_000_or_under_from_a_motor_vehicle ),method="lm",se=FALSE) +
+  labs(
+    title="Total Thefts From Motor Vehicles ($5,000 or Under)",
+    subtitle="Newfoundland and Labrador",
+    x="Year",
+    y="Thefts",
+    caption="Data from Open Data Newfoundland and Labrador",
+  )
 ```
 
 Thefts from motor vehicles below \$5,000 are clearly **decreasing** with time. What about thefts above \$5,000?
 
 ```{r}
   data |>
-    distinct(geography,year,motor_vehicle_theft_type,.keep_all=TRUE) |>
+    distinct(geography,year,.keep_all=TRUE) |>
     group_by(year) |>
-    filter(motor_vehicle_theft_type=="Over $5,000") |>
-    summarize(motor_vehicle_theft_amount=sum(motor_vehicle_theft_amount)) |>
-    ggplot(aes(year,motor_vehicle_theft_amount)) +
-    geom_line() +
-    geom_smooth(se=FALSE,method="lm") +
-    scale_x_continuous(breaks=seq(2006,2020,1)) +
-    labs(
-      title="Total Theft from Motor Vehicles (Over $5,000)",
-      subtitle="Newfoundland and Labrador",
-      x = "Year",
-      y = "Incidents",
-      caption="Data from Open Data Newfoundland and Labrador"
-    )
+    summarize(theft_over_5_000_from_a_motor_vehicle=sum(theft_over_5_000_from_a_motor_vehicle)) |>
+    ggplot(aes(year)) +
+    geom_line(aes(y=theft_over_5_000_from_a_motor_vehicle)) +
+    geom_smooth(aes(y=theft_over_5_000_from_a_motor_vehicle ),method="lm",se=FALSE) +
+  labs(
+    title="Total Thefts From Motor Vehicles (Over $5,000)",
+    subtitle="Newfoundland and Labrador",
+    x="Year",
+    y="Thefts",
+    caption="Data from Open Data Newfoundland and Labrador",
+  )
 ```
 
 The number of high-value thefts from motor vehicles in the province is clearly **increasing** with time.
@@ -1302,24 +1269,33 @@ There is a definite **increase** in the number of impaired driving charges over 
 
 ```{r}
   data |>
-    ggplot(aes(year)) +
-    geom_col(aes(y=impaired_operation_number,color=impaired_operation_type,fill=impaired_operation_type),position=position_dodge(1)) +
+    distinct(geography,year,.keep_all=TRUE) |>
+    group_by(year) |>
+    reframe(
+      impaired_operation_causing_bodily_harm=sum(impaired_operation_causing_bodily_harm),
+      impaired_operation_causing_death=sum(impaired_operation_causing_death),
+    ) |>
+    pivot_longer(
+      cols=c(impaired_operation_causing_bodily_harm,impaired_operation_causing_death),
+      names_to="impaired_operation_type",
+      values_to="impaired_operation_amount"
+    ) |>
+      mutate(impaired_operation_type=str_replace(impaired_operation_type,"impaired_operation_causing_bodily_harm", "Causing Bodily Harm")) |>
+      mutate(impaired_operation_type=str_replace(impaired_operation_type,"impaired_operation_causing_death","Causing Death")) |>
+      ggplot(aes(year)) +
+      geom_col(aes(y=impaired_operation_amount,color=impaired_operation_type,fill=impaired_operation_type),position="dodge2") +
   theme(
     legend.position="bottom"
-  ) +
-  scale_x_continuous(breaks=seq(2006,2020,1)) +
-  labs(
-    title="Total Impaired Driving Charges By Type",
+  ) + labs(
+    title="Total Charges of Impaired Operation By Type",
     subtitle="Newfoundland and Labrador",
     x="Year",
     y="Charges",
-    fill="Legend",
     caption="Data from Open Data Newfoundland and Labrador",
-  ) +
-  guides(
+    fill="Legend"
+  ) + guides(
     color="none"
-  ) +
-  scale_color_colorblind() +
+  ) + scale_color_colorblind() +
   scale_fill_colorblind()
 ```
 
