@@ -853,8 +853,6 @@ Once again, the **Northeast Avalon** dominates in terms of total incidents, this
 
 Incidences of criminal harassment have been **increasing** with time for the province as a whole.
 
-# Extortion, Fraud and Identity Theft
-
 ## How do incidents of extortion vary by region?
 
 ```{r}
@@ -876,6 +874,53 @@ Incidences of criminal harassment have been **increasing** with time for the pro
 ```
 
 Once again, the **Northeast Avalon** region ranks first, this time in incidents of extortion.
+
+# Counterfeiting, Fraud and Identity Theft
+
+## How do the charges of counterfeiting vary by region?
+
+```{r}
+  data |>
+  distinct(geography,year,.keep_all=TRUE) |>
+  ggplot(aes(x=reorder(geography,counterfeiting))) +
+  geom_col(aes(y=counterfeiting,fill="Charges",color="Charges")) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind() +
+  labs(
+    title="Total Charges of Counterfeiting By Region",
+    x="Region",
+    y="Charges",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  coord_flip()
+```
+
+The most charges for counterfeiting were laid in the **Northeast Avalon** region.
+
+## What is the trend for charges of counterfeiting across the province?
+
+```{r}
+  data |>
+    distinct(geography,year,.keep_all=TRUE) |>
+    group_by(year) |>
+    filter(year >= 2010) |>
+    summarize(counterfeiting=sum(counterfeiting)) |>
+    ggplot(aes(year,counterfeiting)) +
+    geom_line() +
+    geom_smooth(se=FALSE,method="lm") +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Incidents of Counterfeiting",
+      x = "Year",
+      y = "Incidents",
+      caption="Data from Open Data Newfoundland and Labrador",
+      subtitle="Newfoundland and Labrador"
+    )
+```
+
+It is clear that the number of charges of counterfeiting is **increasing** with time for the province as a whole.
 
 ## How do the regions vary in terms of total incidents of fraud?
 
@@ -992,51 +1037,6 @@ Again, since identity fraud as a violation code was only introduced in 2010, in 
 ```
 
 There appears to be a clear, **positive** trend in the number of incidents of identity fraud across the province.
-
-## How do the charges of counterfeiting vary by region?
-
-```{r}
-  data |>
-  distinct(geography,year,.keep_all=TRUE) |>
-  ggplot(aes(x=reorder(geography,counterfeiting))) +
-  geom_col(aes(y=counterfeiting,fill="Charges",color="Charges")) +
-  theme(legend.position="none") +
-  scale_color_colorblind() +
-  scale_fill_colorblind() +
-  labs(
-    title="Total Charges of Counterfeiting By Region",
-    x="Region",
-    y="Charges",
-    caption="Data from Open Data Newfoundland and Labrador",
-    subtitle="Newfoundland and Labrador (2006-2020)"
-  ) +
-  coord_flip()
-```
-
-The most charges for counterfeiting were laid in the **Northeast Avalon** region.
-
-## What is the trend for charges of counterfeiting across the province?
-
-```{r}
-  data |>
-    distinct(geography,year,.keep_all=TRUE) |>
-    group_by(year) |>
-    filter(year >= 2010) |>
-    summarize(counterfeiting=sum(counterfeiting)) |>
-    ggplot(aes(year,counterfeiting)) +
-    geom_line() +
-    geom_smooth(se=FALSE,method="lm") +
-    scale_x_continuous(breaks=seq(2006,2020,1)) +
-    labs(
-      title="Total Incidents of Counterfeiting",
-      x = "Year",
-      y = "Incidents",
-      caption="Data from Open Data Newfoundland and Labrador",
-      subtitle="Newfoundland and Labrador"
-    )
-```
-
-It is clear that the number of charges of counterfeiting is **increasing** with time for the province as a whole.
 
 # Property Crime
 
