@@ -9,7 +9,6 @@ output:
 library(tidyverse)
 library(janitor)
 library(ggthemes)
-library(scales)
 
 # Disable the display of scientific notation.
 options(scipen = 999)
