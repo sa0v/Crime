@@ -912,9 +912,9 @@ The most charges for counterfeiting were laid in the **Northeast Avalon** region
     geom_smooth(se=FALSE,method="lm") +
     scale_x_continuous(breaks=seq(2006,2020,1)) +
     labs(
-      title="Total Incidents of Counterfeiting",
+      title="Total Charges of Counterfeiting",
       x = "Year",
-      y = "Incidents",
+      y = "Charges",
       caption="Data from Open Data Newfoundland and Labrador",
       subtitle="Newfoundland and Labrador"
     )
