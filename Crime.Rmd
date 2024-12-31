@@ -43,7 +43,7 @@ data <- data |>
   mutate(geography = str_replace(geography, "Northeast Avalon R.N.C", "Northeast Avalon, R.N.C."))
 ```
 
-This [RStudio](https://resources.rstudio.com/categories/rstudio-ide/) notebook studies crime in Newfoundland and Labrador, Canada over a 14 year period. The data set used was made available by **Open Data Newfoundland and Labrador.
+This [RStudio](https://resources.rstudio.com/categories/rstudio-ide/) notebook studies crime in Newfoundland and Labrador, Canada over a 14 year period. The data set used was made available by **Open Data Newfoundland and Labrador.**
 
 # Violent Crime
 
