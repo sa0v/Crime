@@ -1315,7 +1315,7 @@ Incidents of impaired operation that resulted in bodily harm or death made up a 
   labs(
     title="Total Prohibited Driver Charges By Region",
     x="Region",
-    y="Drivers",
+    y="Charges",
     caption="Data from Open Data Newfoundland and Labrador",
     subtitle="Newfoundland and Labrador (2006-2020)"
   ) +
