@@ -573,7 +573,7 @@ The total number of motor vehicle thefts appears to be **decreasing** over time 
     y="Thefts",
     fill="Legend",
     caption="Data from Open Data Newfoundland and Labrador",
-    subtitle="Newfoundland and Labrador (2006-2020)"
+    subtitle="Newfoundland and Labrador"
   ) +
   theme(
     legend.position="bottom"
