@@ -9,7 +9,6 @@ output:
 library(tidyverse)
 library(janitor)
 library(ggthemes)
-library(scales)
 
 # Disable the display of scientific notation.
 options(scipen = 999)
@@ -111,8 +110,7 @@ There is an apparent, **upward** trend in the number of violent criminal code vi
     coord_flip() +
     theme(legend.position = "none") +
     scale_color_colorblind() +
-    scale_fill_colorblind() +
-    scale_y_continuous(breaks=breaks_pretty(n=3))
+    scale_fill_colorblind()
 ```
 
 The **Northeast Avalon** region experienced the largest number of homicides.
