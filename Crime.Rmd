@@ -1265,7 +1265,7 @@ The **Northeast Avalon** leads in terms of total impaired driving charges.
 
 There is a definite **increase** in the number of impaired driving charges over time.
 
-## How do the number of impaired driving charges causing injury or death vary over time?
+## How do the number of impaired operation charges causing injury or death vary over time?
 
 ```{r}
   data |>
@@ -1300,7 +1300,7 @@ There is a definite **increase** in the number of impaired driving charges over 
   scale_x_continuous(breaks=seq(2006,2020,1))
 ```
 
-Incidents of impaired driving that resulted in bodily harm or death made up a small proportion of the total number of impaired driving incidents.
+Incidents of impaired operation that resulted in bodily harm or death made up a small proportion of the total number of impaired driving incidents.
 
 ## How does the number of prohibited drivers on the road vary by region?
 
