@@ -3,4 +3,5 @@
 .RData
 .Ruserdata
 *.html
-Crime_files
+Crime_files/
+rsconnect/
