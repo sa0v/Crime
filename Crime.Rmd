@@ -1296,7 +1296,8 @@ There is a definite **increase** in the number of impaired driving charges over 
   ) + guides(
     color="none"
   ) + scale_color_colorblind() +
-  scale_fill_colorblind()
+  scale_fill_colorblind() +
+  scale_x_continuous(breaks=seq(2006,2020,1))
 ```
 
 Incidents of impaired driving that resulted in bodily harm or death made up a small proportion of the total number of impaired driving incidents.
@@ -1321,7 +1322,7 @@ Incidents of impaired driving that resulted in bodily harm or death made up a sm
   coord_flip()
 ```
 
-The **Northeast Avalon** leads in terms of drivers who are arrested while driving, when they are already prohibited from doing so.
+The **Northeast Avalon** leads in terms of prohibited drivers on the road.
 
 ## Is there a trend in the number of prohibited drivers across the province?
 
