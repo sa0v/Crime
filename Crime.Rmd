@@ -1442,7 +1442,7 @@ The dominance of the **Northeast Avalon** region in terms of total crimes commit
 
 This study has obvious weaknesses:
 
-1. This study only considers the charges that are laid as the result of a crime being committed. It does **not** take into consideration the following court proceedings and their outcomes (e.g. whether or not a person is found innocent or guilty of what they are charged of, whether the charges laid were dropped or thrown out and so on).
+1. This study only considers the charges that are laid as the result of a crime being committed. It does **not** take into consideration the following court proceedings and their outcomes (e.g. whether the party responsible is found innocent or guilty, whether the charges were dropped and so on).
 
 # Conclusion
 
