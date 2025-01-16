@@ -1,0 +1,1487 @@
+---
+title: "Crime in Newfoundland and Labrador (2006-2020)"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(ggthemes)
+library(RColorBrewer)
+data <- read.csv("https://opendata.gov.nl.ca/public/opendata/filedownload/?file-id=17253")
+
+data <- data |>
+  janitor::clean_names() |>
+  mutate(geography = factor(geography)) |>
+  # Focus upon actual incidents of crime.
+  filter(data_type == "actual_incidents") |>
+  # We will restrict our area of study to the police regions of Newfoundland
+  # and Labrador.
+  filter(
+    geography != "Yukon",
+    geography != "Saskatchewan",
+    geography != "Quebec",
+    geography != "Prince Edward Island",
+    geography != "Ontario",
+    geography != "Nunavut",
+    geography != "Northwest Territories",
+    geography != "New Brunswick",
+    geography != "Manitoba",
+    geography != "Canada",
+    geography != "British Columbia",
+    geography != "Alberta",
+    geography != "Nova Scotia",
+    geography != "Newfoundland and Labrador",
+  ) |>
+  select(!c('geography_type', 'geography_note', 'data_type')) |>
+  mutate(geography = str_replace(geography, "Northeast Avalon R.N.C", "Northeast Avalon, R.N.C.")) |>
+  distinct(geography,year,.keep_all=TRUE)
+```
+
+This [RStudio](https://resources.rstudio.com/categories/rstudio-ide/) notebook studies crime in Newfoundland and Labrador, Canada over a 14 year period. The data set used was made available by **Open Data Newfoundland and Labrador.**
+
+# Violent Crime
+
+## Which region experienced the largest number of total violent criminal code violations?
+
+We can get a sense for the scale of violent crime in the province by examining the total number of violent criminal code violations in each region.
+
+```{r}
+data_summary <- data %>%
+  group_by(geography) %>%
+  summarise(total_violations = sum(total_violent_criminal_code_violations, na.rm = TRUE))
+
+ggplot(data_summary, aes(reorder(geography, total_violations), total_violations, fill = total_violations)) +
+  geom_col(color = "black") +
+  labs(
+    title = "Total Violent Criminal Code Violations By Region",
+    x = "Region",
+    y = "Total Violations",
+    caption = "Data from Open Data Newfoundland and Labrador",
+    subtitle = "Newfoundland and Labrador (2006-2020)"
+  ) +
+  coord_flip() +
+  theme(legend.position = "none") +
+  scale_fill_viridis()
+
+
+```
+
+It would seem that the **Northeast Avalon** region leads in terms of the number of total violent criminal code violations.
+
+## Is there a trend in the number of total violent criminal code violations for the province?
+
+```{r}
+ library(viridis)
+
+data %>%
+  group_by(year) %>%
+  summarize(total_violent_criminal_code_violations = sum(total_violent_criminal_code_violations)) %>%
+  ggplot(aes(x = year, y = total_violent_criminal_code_violations)) +
+  geom_line(aes(color = total_violent_criminal_code_violations)) +  # Color the line based on violations
+  geom_smooth(se = FALSE, method = "lm", color = brewer.pal(3,"Dark2")[1]) +  
+  scale_x_continuous(breaks = seq(2006, 2020, 1)) +
+  scale_color_viridis() +  # Apply the 'viridis' color scale
+  labs(
+    title = "Total Violent Criminal Code Violations",
+    subtitle = "Newfoundland and Labrador",
+    x = "Year",
+    y = "Violations",
+    caption = "Data from Open Data Newfoundland and Labrador",
+    color="Legend"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position="none"
+  )
+
+
+```
+
+There is an apparent, **upward** trend in the number of violent criminal code violations across the province. Let us now examine specific forms of violent crime and their numbers.
+
+## Which region experienced the largest number of homicides?
+
+```{r}
+library(viridis)
+library(dplyr)
+library(ggplot2)
+
+data %>%
+  group_by(geography) %>%
+  summarize(total_homicides = sum(homicide, na.rm = TRUE)) %>%
+  ggplot(aes(reorder(geography, total_homicides), total_homicides)) +
+  geom_col(aes(fill = total_homicides), color = "black") +  # Use viridis colors for the fill, with black borders
+  labs(
+    title = "Total Homicides By Region",
+    x = "Region",
+    y = "Total Homicides",
+    subtitle = "Newfoundland and Labrador (2006-2020)",
+    caption = "Data from Open Data Newfoundland and Labrador"
+  ) +
+  coord_flip() +
+  theme(legend.position = "none") +
+  scale_fill_viridis()  # Apply the 'viridis' color palette
+
+
+```
+
+The **Northeast Avalon** region experienced the largest number of homicides.
+
+## Which region leads in assaults against peace officers?
+
+```{r}
+library(viridis)
+library(dplyr)
+library(ggplot2)
+
+data %>%
+  group_by(geography) %>%
+  summarize(assault_peace_officer = sum(assault_peace_officer, na.rm = TRUE)) %>%
+  ggplot(aes(reorder(geography, assault_peace_officer), assault_peace_officer)) +
+  geom_col(aes(fill = assault_peace_officer), color = "black") +  # Use viridis color palette for fill and black borders
+  coord_flip() +
+  labs(
+    title = "Total Assaults Against Peace Officers By Region",
+    x = "Region",
+    y = "Assaults",
+    caption = "Data from Open Data Newfoundland and Labrador",
+    subtitle = "Newfoundland and Labrador (2006-2020)"
+  ) +
+  theme(legend.position = "none") +
+  scale_fill_viridis()  # Apply viridis color palette for the fill
+
+```
+
+Here we see that the **Northeast Avalon** region leads in terms of assaults against peace officers. This certainly fits with the general trend of increasing violent crime within the region. It is concerning, however, to note the number of incidents in which even officers of the law became the victims of violent crimes.
+
+## What kind and number of assaults were committed against members of the public in the province?
+
+Assaults are ranked on a scale. There are three levels:
+
+- level 1,
+- level 2 (involving a weapon or causing bodily harm),
+- level 3 (aggravated).
+
+```{r}
+  library(viridis)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(stringr)
+
+data |>
+  group_by(year) |>
+  reframe(
+    assault_level_1 = sum(assault_level_1),
+    assault_level_2_with_weapon_or_causing_bodily_harm = sum(assault_level_2_with_weapon_or_causing_bodily_harm),
+    assault_level_3_aggravated = sum(assault_level_3_aggravated)
+  ) |>
+  pivot_longer(
+    cols = c(assault_level_1, assault_level_2_with_weapon_or_causing_bodily_harm, assault_level_3_aggravated),
+    names_to = "assault_type",
+    values_to = "assault_number"
+  ) |>
+  mutate(assault_type = str_replace(assault_type, "assault_level_1", "Level 1")) %>%
+  mutate(assault_type = str_replace(assault_type, "assault_level_2_with_weapon_or_causing_bodily_harm", "Level 2")) %>%
+  mutate(assault_type = str_replace(assault_type, "assault_level_3_aggravated", "Level 3")) %>%
+  ggplot(aes(x = year, y = assault_number, fill = assault_type)) +
+  geom_col(color = "black", position = "dodge2") +  # Add black borders around the columns
+  theme(
+    legend.position = "bottom"
+  ) +
+  guides(
+    color = "none",
+    fill = guide_legend(nrow = 1, byrow = TRUE)
+  ) + 
+  labs(
+    title = "Total Assaults By Type",
+    subtitle = "Newfoundland and Labrador",
+    x = "Year",
+    y = "Assaults",
+    caption = "Data from Open Data Newfoundland and Labrador",
+    fill = "Legend"
+  ) +
+  scale_x_continuous(breaks = seq(2006, 2020, 1)) +
+  scale_fill_viridis(discrete = TRUE)  # Apply viridis color palette for discrete values
+
+```
+
+**Level 1** assaults account for more than any other level.
+
+# Sex Crimes
+
+## How do the regions vary in terms of sexual assaults?
+
+Sexual assaults are "ranked" by three levels:
+
+- level 1,
+- level 2 (committed with a weapon or causing bodily harm),
+- level 3 (aggravated).
+
+```{r}
+data |>
+  group_by(geography) |>
+  summarize(sexual_assault_level_1=sum(sexual_assault_level_1),na.rm=TRUE) |>
+  ggplot(aes(reorder(geography,sexual_assault_level_1),sexual_assault_level_1)) +
+  geom_col(aes(fill=sexual_assault_level_1),color="black") +
+  coord_flip() +
+  labs(
+    title="Total Sexual Assaults (Level 1) By Region",
+    x="Region",
+    y="Assaults",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  theme(legend.position="none") +
+  scale_fill_viridis_c()
+```
+
+The **Northeast Avalon** region ranks first in terms of total number of sexual assaults (level 1).
+
+```{r}
+data |>
+  group_by(geography) |>
+  summarize(sexual_assault_level_2_with_a_weapon_or_bodily_harm=sum(sexual_assault_level_2_with_a_weapon_or_bodily_harm),na.rm=TRUE) |>
+  ggplot(aes(reorder(geography,sexual_assault_level_2_with_a_weapon_or_bodily_harm),sexual_assault_level_2_with_a_weapon_or_bodily_harm)) +
+  geom_col(aes(fill=sexual_assault_level_2_with_a_weapon_or_bodily_harm),color="black") +
+  coord_flip() +
+  labs(
+    title="Total Sexual Assaults (Level 2) By Region",
+    x="Region",
+    y="Assaults",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  theme(legend.position="none") +
+  scale_fill_viridis_c()
+```
+
+Again, the **Northeast Avalon** leads in terms of sexual assaults (level 2), this time involving a weapon or bodily harm.
+
+```{r}
+data |>
+  group_by(geography) |>
+  summarize(sexual_assault_level_3_aggravated=sum(sexual_assault_level_3_aggravated),na.rm=TRUE) |>
+  ggplot(aes(reorder(geography,sexual_assault_level_3_aggravated),sexual_assault_level_3_aggravated)) +
+  geom_col(aes(fill=sexual_assault_level_3_aggravated),color="black") +
+  coord_flip() +
+  labs(
+    title="Total Sexual Assaults (Level 3) By Region",
+    x="Region",
+    y="Assaults",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  theme(legend.position="none") +
+  scale_fill_viridis_c()
+```
+
+The **Labrador District** experienced the greatest number of aggravated sexual assaults (level 3).
+
+## How do the levels of sexual assault vary across the province?
+
+```{r}
+  data |>
+  distinct(geography,year,.keep_all=TRUE) |>
+  group_by(year) |>
+  reframe(
+    sexual_assault_level_1=sum(sexual_assault_level_1),
+    sexual_assault_level_2_with_a_weapon_or_bodily_harm=sum(sexual_assault_level_2_with_a_weapon_or_bodily_harm),
+    sexual_assault_level_3_aggravated=sum(sexual_assault_level_3_aggravated)
+  ) |>
+  pivot_longer(
+    cols=c(sexual_assault_level_1,sexual_assault_level_2_with_a_weapon_or_bodily_harm,sexual_assault_level_3_aggravated),
+    names_to="sexual_assault_type",
+    values_to="sexual_assault_number"
+  ) |>
+  mutate(sexual_assault_type=str_replace(sexual_assault_type,"sexual_assault_level_1","Level 1")) |>
+  mutate(sexual_assault_type=str_replace(sexual_assault_type,"sexual_assault_level_2_with_a_weapon_or_bodily_harm","Level 2")) |>
+  mutate(sexual_assault_type=str_replace(sexual_assault_type,"sexual_assault_level_3_aggravated","Level 3")) |>
+  ggplot(aes(year)) +
+  
+  geom_col(aes(y=sexual_assault_number,fill=sexual_assault_type),color="black",position="dodge2") +
+  theme(
+    legend.position="bottom"
+  ) +
+  guides(
+    color="none",
+    fill=guide_legend(nrow=1,byrow=TRUE)
+  ) + labs(
+    title="Total Sexual Assaults By Type",
+    subtitle="Newfoundland and Labrador",
+    x="Year",
+    y="Assaults",
+    caption="Data from Open Data Newfoundland and Labrador",
+    fill="Legend",
+  ) +
+  scale_x_continuous(breaks=seq(2006,2020,1)) +
+  scale_fill_viridis_d()
+```
+
+The most common type of sexual assault across the province is **level 1.**
+
+## How are children affected by sex crimes in Newfoundland and Labrador?
+
+```{r}
+  data |>
+    group_by(geography) |>
+    summarize(total_sexual_violations_against_children = sum(total_sexual_violations_against_children)) |>
+    ggplot(aes(reorder(geography,total_sexual_violations_against_children),total_sexual_violations_against_children)) +
+    geom_col(aes(fill=total_sexual_violations_against_children),color="black") +
+    labs(
+      title="Total Sexual Violations Against Children By Region",
+      x = "Region",
+      y = "Sexual Violations",
+      caption = "Data from Open Data Newfoundland and Labrador",
+      subtitle="Newfoundland and Labrador (2006-2020)"
+    ) +
+    coord_flip() +
+    theme(legend.position="none") +
+    scale_fill_viridis_c()
+```
+
+The **Northeast Avalon** district experienced the most total sexual violations against children.
+
+## Is there a trend in sexual violations against children in the province?
+
+```{r}
+  data |>
+    distinct(geography,year,.keep_all=TRUE) |>
+    group_by(year) |>
+    summarize(total_sexual_violations_against_children=sum(total_sexual_violations_against_children)) |>
+    ggplot(aes(year,total_sexual_violations_against_children)) +
+    geom_line(aes(color=total_sexual_violations_against_children),linewidth=1) +
+    geom_smooth(se=FALSE,method="lm",color=brewer.pal(3,"Dark2")[1]) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Sexual Violations Against Children",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Violations",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) +
+    scale_color_viridis_c() +
+    theme(
+      legend.position="none"
+    )
+```
+
+There is a clear, **positive** trend in the number of sexual violations against children.
+
+## How do the charges of prostitution vary by region?
+
+```{r}
+  data |>
+    group_by(geography) |>
+    summarize(total_prostitution=sum(total_prostitution)) |>
+    ggplot(aes(reorder(geography,total_prostitution),total_prostitution)) +
+    geom_col(aes(fill=total_prostitution),color="black") +
+    labs(
+      title="Total Charges of Prostitution By Region",
+      x = "Region",
+      y = "Charges",
+      caption = "Data from Open Data Newfoundland and Labrador",
+      subtitle="Newfoundland and Labrador (2006-2020)"
+    ) +
+    coord_flip() +
+    theme(legend.position="none") +
+    scale_fill_viridis_c()
+```
+
+In this case the **Northeast Avalon** region outnumbers all others in terms of charges laid for prostitution.
+
+## How do the incidents of indecent acts vary by region?
+
+```{r}
+  data |>
+    group_by(geography) |>
+    summarize(indecent_acts=sum(indecent_acts)) |>
+    ggplot(aes(reorder(geography,indecent_acts),indecent_acts)) +
+    geom_col(aes(fill=indecent_acts),color="black") +
+    labs(
+      title="Total Indecent Acts By Region",
+      x = "Region",
+      y = "Incidents",
+      caption = "Data from Open Data Newfoundland and Labrador",
+      subtitle="Newfoundland and Labrador (2006-2020)"
+    ) +
+    coord_flip() +
+    theme(legend.position="none") +
+    scale_fill_viridis_c()
+```
+
+The majority of crimes involving indecent acts were committed in the **Northeast Avalon** region.
+
+# Robbery and Theft
+
+## How did the number of robberies rank across the different regions over time?
+
+```{r}
+  data |>
+    group_by(geography) |>
+    summarize(total_robbery=sum(total_robbery)) |>
+    ggplot(aes(reorder(geography,total_robbery),total_robbery)) +
+    geom_col(aes(fill=total_robbery),color="black") +
+    labs(
+      title="Total Robberies By Region",
+      x = "Region",
+      y = "Robberies",
+      caption = "Data from Open Data Newfoundland and Labrador",
+      subtitle="Newfoundland and Labrador (2006-2020)"
+    ) +
+    coord_flip() +
+    theme(legend.position="none") +
+    scale_fill_viridis_c()
+``` 
+
+We see in this case that the **Northeast Avalon** region experienced the most robberies over time by a wide margin.
+
+## Is there a trend in the number of robberies in the province?
+
+```{r}
+  data |>
+    distinct(geography,year,.keep_all=TRUE) |>
+    group_by(year) |>
+    summarize(total_robbery=sum(total_robbery)) |>
+    ggplot(aes(year,total_robbery)) +
+    geom_line(aes(color=total_robbery),linewidth=1) +
+    geom_smooth(se=FALSE,method="lm",color=brewer.pal(3,"Dark2")[1]) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Robberies",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Robberies",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) +
+    theme(
+      legend.position = "none"
+    ) + 
+    theme(legend.position="none") +
+    scale_color_viridis_c()
+```
+
+There has been a clear, **positive** trend in the number of robberies over time.
+
+## How do the regions vary in terms of shoplifting incidents?
+
+```{r}
+  data |>
+    group_by(geography) |>
+    summarize(shoplifting_5_000_or_under = sum(shoplifting_5_000_or_under)) |>
+    ggplot(aes(reorder(geography,shoplifting_5_000_or_under),shoplifting_5_000_or_under)) +
+    geom_col(aes(fill=shoplifting_5_000_or_under),color="black") +
+    theme(legend.position="none") +
+    labs(
+      title="Total Shoplifting Incidents (Under $5,000)",
+      x="Region",
+      y="Incidents",
+      caption="Data from Open Data Newfoundland and Labrador",
+      subtitle="Newfoundland and Labrador (2006-2020)"
+    ) +
+    scale_fill_viridis_c() +
+    coord_flip()
+```
+
+Here again, we see that the **Northeast Avalon** dominates by a wide margin in terms of the number of total minor shoplifting incidents over time.
+
+## What about incidents in which over $5,000 of property was stolen?
+
+```{r}
+  data |>
+    group_by(geography) |>
+    summarize(shoplifting_over_5_000 = sum(shoplifting_over_5_000)) |>
+    ggplot(aes(reorder(geography,shoplifting_over_5_000),shoplifting_over_5_000)) +
+    geom_col(aes(fill=shoplifting_over_5_000),color="black") +
+    theme(legend.position="none") +
+    labs(
+      title="Total Shoplifting Incidents (Over $5,000)",
+      x="Region",
+      y="Incidents",
+      caption="Data from Open Data Newfoundland and Labrador",
+      subtitle="Newfoundland and Labrador (2006-2020)"
+    ) +
+    scale_fill_viridis() +
+    coord_flip()
+```
+
+Again, we see that the **Northeast Avalon** region vastly outnumbers its neighbors in terms of shoplifting incidents, even when those incidents involve much more expensive property.
+
+## Are the incidences of shoplifting of over $5,000 in stolen goods increasing or decreasing?
+
+```{r}
+  data |>
+    distinct(geography,year,.keep_all=TRUE) |>
+    group_by(year) |>
+    summarize(shoplifting_over_5_000=sum(shoplifting_over_5_000)) |>
+    ggplot(aes(year,shoplifting_over_5_000)) +
+    geom_line(aes(color=shoplifting_over_5_000),linewidth=1) +
+    geom_smooth(se=FALSE,method="lm",color=brewer.pal(3,"Dark2")[1]) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Incidents of Shoplifting (Above $5,000)",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Incidents",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) + theme(
+      legend.position="none"
+    ) + scale_color_viridis()
+```
+
+The number of major shoplifting incidents in the province is clearly **increasing** over time.
+
+## How do the number of motor vehicle thefts vary by region?
+
+For the purposes of studying motor vehicle thefts, only the theft of the vehicle, not the vehicle's cost, will be considered.
+
+```{r}
+  data |>
+  group_by(geography) |>
+  summarize(total_theft_of_motor_vehicle=sum(total_theft_of_motor_vehicle)) |>
+  ggplot(aes(reorder(geography,total_theft_of_motor_vehicle),total_theft_of_motor_vehicle)) +
+  geom_col(aes(fill=total_theft_of_motor_vehicle),color="black") + 
+  labs(
+    title="Total Motor Vehicle Thefts By Region",
+    x="Region",
+    y="Thefts",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  theme(legend.position="none") +
+  scale_fill_viridis_c() +
+  coord_flip()
+```
+
+The **Northeast Avalon** region experienced the largest total number of motor vehicle thefts. 
+
+## Is there a trend in total motor vehicle thefts across the province?
+
+```{r}
+  data |>
+    distinct(geography,year,.keep_all=TRUE) |>
+    group_by(year) |>
+    summarize(total_theft_of_motor_vehicle=sum(total_theft_of_motor_vehicle)) |>
+    ggplot(aes(year,total_theft_of_motor_vehicle)) +
+    geom_line(aes(color=total_theft_of_motor_vehicle),linewidth=1) +
+    geom_smooth(se=FALSE,method="lm",color=brewer.pal(3,"Dark2")[1]) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Motor Vehicle Thefts",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Thefts",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) + theme(
+      legend.position="none"
+    ) +
+    scale_color_viridis_c()
+```
+
+The total number of motor vehicle thefts appears to be **decreasing** over time across the province.
+
+## Is theft from motor vehicles more common below or above $5,000?
+
+```{r}
+  data |>
+  group_by(year) |>
+  reframe(
+    theft_5_000_or_under_from_a_motor_vehicle = sum(theft_5_000_or_under_from_a_motor_vehicle),
+    theft_over_5_000_from_a_motor_vehicle = sum(theft_over_5_000_from_a_motor_vehicle)
+  ) |>
+  pivot_longer(
+    cols = c(theft_5_000_or_under_from_a_motor_vehicle, theft_over_5_000_from_a_motor_vehicle),
+    names_to = "motor_vehicle_theft_type",
+    values_to = "motor_vehicle_theft_amount"
+  ) |>
+  mutate(motor_vehicle_theft_type = str_replace(motor_vehicle_theft_type, "theft_5_000_or_under_from_a_motor_vehicle", "$5,000 or Under")) |>
+  mutate(motor_vehicle_theft_type = str_replace(motor_vehicle_theft_type, "theft_over_5_000_from_a_motor_vehicle", "Over $5,000")) |>
+  ggplot(aes(year)) +
+  geom_col(aes(fill = motor_vehicle_theft_type, y = motor_vehicle_theft_amount), color = "black", position = position_dodge(1)) +
+  scale_fill_viridis_d() +
+  labs(
+    title = "Total Thefts From Motor Vehicles By Type",
+    x = "Year",
+    y = "Thefts",
+    fill = "Legend",
+    caption = "Data from Open Data Newfoundland and Labrador",
+    subtitle = "Newfoundland and Labrador"
+  ) +
+  theme(
+    legend.position = "bottom"
+  ) +
+  scale_x_continuous(breaks = seq(2006, 2020, 1)) +
+  guides(fill = guide_legend(nrow = 3, byrow = TRUE))  # Corrected guides usage
+
+```
+
+When it comes to thefts from motor vehicles, thefts below \$5,000 are far more common than those above \$5,000.
+
+## What are the trends for theft from motor vehicles across the province?
+
+For thefts from motor vehicles below $5,000:
+
+```{r}
+  data |>
+    group_by(year) |>
+    summarize(theft_5_000_or_under_from_a_motor_vehicle=sum(theft_5_000_or_under_from_a_motor_vehicle)) |>
+    ggplot(aes(year)) +
+    geom_line(aes(color=theft_5_000_or_under_from_a_motor_vehicle, y=theft_5_000_or_under_from_a_motor_vehicle),linewidth=1) +
+    geom_smooth(aes(y=theft_5_000_or_under_from_a_motor_vehicle ),method="lm",se=FALSE,color=brewer.pal(3,"Dark2")[1]) +
+  labs(
+    title="Total Thefts From Motor Vehicles ($5,000 or Under)",
+    subtitle="Newfoundland and Labrador",
+    x="Year",
+    y="Thefts",
+    caption="Data from Open Data Newfoundland and Labrador",
+  ) + theme(
+    legend.position="none"
+  ) + 
+  scale_color_viridis()
+```
+
+Thefts from motor vehicles below \$5,000 are clearly **decreasing** with time. What about thefts above \$5,000?
+
+```{r}
+  data |>
+    distinct(geography,year,.keep_all=TRUE) |>
+    group_by(year) |>
+    summarize(theft_over_5_000_from_a_motor_vehicle=sum(theft_over_5_000_from_a_motor_vehicle)) |>
+    ggplot(aes(year)) +
+    geom_line(aes(y=theft_over_5_000_from_a_motor_vehicle,color=theft_over_5_000_from_a_motor_vehicle),linewidth=1) +
+    geom_smooth(aes(y=theft_over_5_000_from_a_motor_vehicle),color=brewer.pal(3,"Dark2")[1],method="lm",se=FALSE) +
+  labs(
+    title="Total Thefts From Motor Vehicles (Over $5,000)",
+    subtitle="Newfoundland and Labrador",
+    x="Year",
+    y="Thefts",
+    caption="Data from Open Data Newfoundland and Labrador",
+  ) + theme(
+    legend.position="none"
+  ) + scale_color_viridis()
+```
+
+The number of high-value thefts from motor vehicles in the province is clearly **increasing** with time.
+
+# Firearms and Weapons Offences
+
+## How do the total number of firearms offences vary by region? 
+
+```{r}
+  data |>
+    group_by(geography) |>
+    summarize(total_firearms_use_of_discharge_pointing=sum(total_firearms_use_of_discharge_pointing)) |>
+    ggplot(aes(reorder(geography,total_firearms_use_of_discharge_pointing),total_firearms_use_of_discharge_pointing)) +
+    geom_col(aes(fill=total_firearms_use_of_discharge_pointing),color="black") +
+    labs(
+      title="Total Firearms Violations By Region",
+      x = "Region",
+      y = "Violations",
+      subtitle="Newfoundland and Labrador (2006-2020)",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) +
+    theme(legend.position="none") +
+    coord_flip() +
+    scale_fill_viridis_c()
+```
+
+The **Northeast Avalon** region vastly outstrips the other regions in terms of firearms offences. 
+
+## Is there a trend in the total number of firearms offences for the province?
+
+```{r}
+  data |>
+    group_by(year) |>
+    summarize(total_firearms_use_of_discharge_pointing=sum(total_firearms_use_of_discharge_pointing)) |>
+    ggplot(aes(year,total_firearms_use_of_discharge_pointing)) +
+    geom_line(aes(color=total_firearms_use_of_discharge_pointing),linewidth=1) +
+    geom_smooth(se=FALSE,method="lm",color=brewer.pal(3,"Dark2")[1]) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Firearms Violations",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Violations",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) + theme(
+      legend.position="none"
+    ) + scale_color_viridis()
+```
+
+There is a clear, **positive** trend in the number of firearms offences. 
+
+What about the weapons violations in general?
+
+## How does the count of total weapons violations vary by region (firearms included)?
+
+```{r}
+  data |>
+    group_by(geography) |>
+    summarize(total_weapons_violations=sum(total_weapons_violations)) |>
+    ggplot(aes(reorder(geography,total_weapons_violations),total_weapons_violations)) +
+    geom_col(aes(fill=total_weapons_violations),color="black") +
+    labs(
+      title="Total Weapons Violations By Region",
+      x = "Region",
+      y = "Violations",
+      caption="Data from Open Data Newfoundland and Labrador",
+      subtitle="Newfoundland and Labrador (2006-2020)"
+    ) +
+    theme(legend.position="none") +
+    scale_fill_viridis() +
+    coord_flip()
+```
+
+Once again, we see that the **Northeast Avalon** ranks first, this time in terms of total weapons violations.
+
+## Is the large number of total weapons violations in the Northeast Avalon part of a trend across the province?
+
+```{r}
+  data |>
+    group_by(year) |>
+    summarize(total_weapons_violations=sum(total_weapons_violations)) |>
+    ggplot(aes(year,total_weapons_violations)) +
+    geom_line(aes(color=total_weapons_violations),linewidth=1) +
+    geom_smooth(se=FALSE,method="lm",color=brewer.pal(3,"Dark2")[1]) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Weapons Violations",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Violations",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) + theme(
+      legend.position = "none"
+    ) +
+    scale_color_viridis_c()
+```
+
+In this case, it is clear that the number of total weapons violations across the province is **rising** over time.
+
+## How do the total number of charges of weapon possession vary by region?
+
+```{r}
+  data |>
+    group_by(geography) |>
+    summarize(possession_of_weapons = sum(possession_of_weapons)) |>
+    ggplot(aes(reorder(geography,possession_of_weapons),possession_of_weapons)) +
+    geom_col(aes(fill=possession_of_weapons),color="black") +
+    labs(
+      title="Total Weapons Possession Charges By Region",
+      x = "Region",
+      y = "Charges",
+      caption="Data from Open Data Newfoundland and Labrador",
+      subtitle="Newfoundland and Labrador (2006-2020)"
+    ) +
+    theme(legend.position="none") +
+    scale_fill_viridis_c() +
+    coord_flip()
+```
+
+The **Northeast Avalon** region leads in terms of charges for weapons possession. 
+
+## Is this part of a larger trend across the province?
+
+```{r}
+  data |>
+    group_by(year) |>
+    summarize(possession_of_weapons=sum(possession_of_weapons)) |>
+    ggplot(aes(year,possession_of_weapons)) +
+    geom_line(aes(color=possession_of_weapons),linewidth=1) +
+    geom_smooth(se=FALSE,method="lm", color=brewer.pal(3,"Dark2")[1]) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Charges of Possession of Weapons",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Charges",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) + theme(
+      legend.position="none"
+    ) + scale_color_viridis()
+```
+
+There does appear to be a **positive** trend in the number of total weapons possession charges.
+
+# Criminal Harassment, Extortion and Threats
+
+## How do the total number of incidents of criminal harassment vary by region?
+
+```{r}
+  data |>
+  group_by(geography) |>
+  summarize(criminal_harassment=sum(criminal_harassment)) |>
+  ggplot(aes(x=reorder(geography,criminal_harassment))) +
+  geom_col(aes(y=criminal_harassment,fill=criminal_harassment),color="black") +
+  theme(legend.position="none") +
+  labs(
+    title="Total Incidents of Criminal Harassment By Region",
+    x="Region",
+    y="Incidents",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  coord_flip() +
+  scale_fill_viridis_c()
+```
+
+The **Northeast Avalon** region leads in terms of incidences of criminal harassment. 
+## How do the total number of incidents of uttering threats vary by region?
+
+```{r}
+  data |>
+  group_by(geography) |>
+  summarize(uttering_threats=sum(uttering_threats)) |>
+  ggplot(aes(x=reorder(geography,uttering_threats))) +
+  geom_col(aes(y=uttering_threats,fill=uttering_threats,),color="black") +
+  theme(legend.position="none") +
+  labs(
+    title="Total Incidents of Uttering Threats By Region",
+    x="Region",
+    y="Incidents",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  coord_flip() +
+  scale_fill_viridis_c()
+```
+
+The **Northeast Avalon** region dominates in terms of incidents of uttering threats.
+
+## How do the total number of threatening phone calls vary by region?
+
+```{r}
+  data |>
+  group_by(geography) |>
+  summarize(threatening_or_harassing_phone_calls=sum(threatening_or_harassing_phone_calls)) |>
+  ggplot(aes(x=reorder(geography,threatening_or_harassing_phone_calls))) +
+  geom_col(aes(y=threatening_or_harassing_phone_calls,fill=threatening_or_harassing_phone_calls,),color="black") +
+  theme(legend.position="none") +
+  labs(
+    title=str_wrap("Total Incidents of Threatening or Harassing Phone Calls By Region",width=50), 
+    x="Region",
+    y="Incidents",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  coord_flip() +
+  scale_fill_viridis_c()
+```
+
+Once again, the **Northeast Avalon** dominates in terms of total incidents, this time with respect to harassing or threatening phone calls.
+
+## How have the total incidents of criminal harassment varied over time across the province?
+
+```{r}
+  data |>
+    distinct(geography,year,.keep_all=TRUE) |>
+    group_by(year) |>
+    summarize(criminal_harassment=sum(criminal_harassment)) |>
+    ggplot(aes(year,criminal_harassment)) +
+    geom_line(aes(color=criminal_harassment),linewidth=1) +
+    geom_smooth(se=FALSE,method="lm",color=brewer.pal(3,"Dark2")[1]) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Incidents of Criminal Harassment",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Incidents",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) + theme(
+      legend.position="none"
+    ) + scale_color_viridis_c()
+```
+
+Incidences of criminal harassment have been **increasing** with time for the province as a whole.
+
+## How do incidents of extortion vary by region?
+
+```{r}
+  data |>
+  group_by(geography) |>
+  summarize(extortion=sum(extortion)) |>
+  ggplot(aes(x=reorder(geography,extortion))) +
+  geom_col(aes(y=extortion,fill=extortion),color="black") +
+  theme(legend.position="none") +
+  labs(
+    title="Total Incidents of Extortion By Region",
+    x="Region",
+    y="Incidents",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  coord_flip() +
+  scale_fill_viridis_c()
+```
+
+Once again, the **Northeast Avalon** region ranks first, this time in incidents of extortion.
+
+# Counterfeiting, Fraud and Identity Theft
+
+## How do the charges of counterfeiting vary by region?
+
+```{r}
+  data |>
+  group_by(geography) |>
+  summarize(counterfeiting=sum(counterfeiting)) |>
+  ggplot(aes(x=reorder(geography,counterfeiting))) +
+  geom_col(aes(y=counterfeiting,fill=counterfeiting),color="black") +
+  theme(legend.position="none") +
+  labs(
+    title="Total Charges of Counterfeiting By Region",
+    x="Region",
+    y="Charges",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  coord_flip() +
+  scale_fill_viridis_c()
+```
+
+The most charges for counterfeiting were laid in the **Northeast Avalon** region.
+
+## How do the regions vary in terms of total incidents of fraud?
+
+```{r}
+  data |>
+  group_by(geography) |>
+  summarize(fraud=sum(fraud)) |>
+  ggplot(aes(x=reorder(geography,fraud))) +
+  geom_col(aes(y=fraud,fill=fraud),color="black") +
+  theme(legend.position="none") +
+  labs(
+    title="Total Incidents of Fraud By Region",
+    x="Region",
+    y="Incidents",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  coord_flip() +
+  scale_fill_viridis_c()
+```
+
+The **Northeast Avalon** region dominates in terms of total counts of fraud by a wide margin.
+
+## How do incidents of identity theft vary by region?
+
+```{r}
+  data |>
+  distinct(geography,year,.keep_all=TRUE) |>
+  ggplot(aes(x=reorder(geography,identity_theft))) +
+  geom_col(aes(y=identity_theft,fill="Incidents",color="Incidents")) +
+  theme(legend.position="none") +
+  scale_color_colorblind() +
+  scale_fill_colorblind() +
+  labs(
+    title="Total Incidents of Identity Theft By Region",
+    x="Region",
+    y="Incidents",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  coord_flip()
+```
+
+Identity theft is clearly a prevalent issue in the **Northeast Avalon** region.
+
+## Is there a trend in the amount of identity theft across the province?
+
+```{r}
+  data |>
+    distinct(geography,year,.keep_all=TRUE) |>
+    group_by(year) |>
+    summarize(identity_theft=sum(identity_theft)) |>
+    ggplot(aes(year,identity_theft)) +
+    geom_line(aes(color=identity_theft),linewidth=1) +
+    geom_smooth(se=FALSE,method="lm",color=brewer.pal(3,"Dark2")[1]) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Incidents of Identity Theft",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Incidents",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) + theme(
+      legend.position="none"
+    ) + scale_color_viridis_c()
+```
+
+The plot demonstrates a clear, **positive** trend in the number of incidents of identity theft across the province.
+
+## How do the incidents of identity fraud vary by region?
+
+```{r}
+  data |>
+  group_by(geography) |>
+  summarize(identity_fraud=sum(identity_fraud)) |>
+  ggplot(aes(x=reorder(geography,identity_fraud))) +
+  geom_col(aes(y=identity_fraud,fill=identity_fraud),color="black") +
+  theme(legend.position="none") +
+  labs(
+    title="Total Incidents of Identity Fraud By Region",
+    x="Region",
+    y="Incidents",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  coord_flip() +
+  scale_fill_viridis_c()
+```
+
+In this case, the **Gander-Lewisporte** district is host to the largest number of incidents of identity fraud. 
+
+## Is there a trend in identity fraud with respect to the province as a whole?
+
+```{r}
+  data |>
+    distinct(geography,year,.keep_all=TRUE) |>
+    group_by(year) |>
+    summarize(identity_fraud=sum(identity_fraud)) |>
+    ggplot(aes(year,identity_fraud)) +
+    geom_line(aes(color=identity_fraud),linewidth=1) +
+    geom_smooth(se=FALSE,method="lm",color=brewer.pal(3,"Dark2")[1]) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Incidents of Identity Fraud",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Incidents",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) + scale_color_viridis_c() +
+    theme(
+      legend.position="none"
+    )
+```
+
+There appears to be a clear, **positive** trend in the number of incidents of identity fraud across the province.
+
+# Property Crime
+
+## How do the total incidents of property crime vary by region?
+
+```{r}
+  data |>
+  group_by(geography) |>
+  summarize(total_property_crime_violations=sum(total_property_crime_violations)) |>
+  ggplot(aes(x=reorder(geography,total_property_crime_violations))) +
+  geom_col(aes(y=total_property_crime_violations,fill=total_property_crime_violations),color="black") +
+  theme(legend.position="none") +
+  labs(
+    title="Total Property Crime Violations By Region",
+    x="Region",
+    y="Violations",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  coord_flip() +
+  scale_fill_viridis_c()
+```
+
+The **Northeast Avalon** region leads in terms of total property crime violations.
+
+## Is there a trend in the number of total property crime violations in the province?
+
+```{r}
+  data |>
+    distinct(geography,year,.keep_all=TRUE) |>
+    group_by(year) |>
+    summarize(total_property_crime_violations=sum(total_property_crime_violations)) |>
+    ggplot(aes(year,total_property_crime_violations)) +
+    geom_line(aes(color=total_property_crime_violations),linewidth=1) +
+    geom_smooth(se=FALSE,method="lm",color=brewer.pal(3,"Dark2")[1]) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Property Crime Violations",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Violations",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) + theme(
+      legend.position="none"
+    ) + scale_color_viridis_c()
+```
+
+There is a definite, **negative** trend in the number of property crime violations in the province.
+
+## How do the number of breaking and entering charges vary by region?
+
+```{r}
+  data |>
+  group_by(geography) |>
+  summarize(total_breaking_and_entering=sum(total_breaking_and_entering)) |>
+  ggplot(aes(x=reorder(geography,total_breaking_and_entering))) +
+  geom_col(aes(y=total_breaking_and_entering,fill=total_breaking_and_entering),color="black") +
+  theme(legend.position="none") +
+  labs(
+    title="Total Breaking and Entering Charges By Region",
+    x="Region",
+    y="Charges",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  coord_flip() +
+  scale_fill_viridis_c()
+```
+
+The **Northeast Avalon** region vastly outstrips its neighbors in terms of breaking and entering charges laid.
+
+## Is there a trend in the number of breaking and entering charges for the province as a whole?
+
+```{r}
+  data |>
+    distinct(geography,year,.keep_all=TRUE) |>
+    group_by(year) |>
+    summarize(total_breaking_and_entering=sum(total_breaking_and_entering)) |>
+    ggplot(aes(year,total_breaking_and_entering)) +
+    geom_line(aes(color=total_breaking_and_entering),linewidth=1) +
+    geom_smooth(se=FALSE,method="lm",color=brewer.pal(3,"Dark2")[1]) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Breaking and Entering Charges",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Charges",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) +
+    scale_color_viridis_c() +
+    theme(
+      legend.position="none"
+    )
+```
+
+In this case, there is a clear, **downward** trend in the number of breaking and entering charges laid across the province.
+
+## How do incidents of arson vary by region?
+
+```{r}
+  data |>
+  group_by(geography) |>
+  summarize(arson=sum(arson)) |>
+  ggplot(aes(x=reorder(geography,arson))) +
+  geom_col(aes(y=arson,fill=arson),color="black") +
+  theme(legend.position="none") +
+  labs(
+    title="Total Incidents of Arson By Region",
+    x="Region",
+    y="Incidents",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  coord_flip() +
+  scale_fill_viridis_c()
+```
+
+We see that the **Northeast Avalon** region leads in total incidents of arson.
+
+## Is there a trend in the number of arson incidents across the province?
+
+```{r}
+  data |>
+    group_by(year) |>
+    summarize(arson=sum(arson)) |>
+    ggplot(aes(year,arson)) +
+    geom_line(aes(color=arson),linewidth=1) +
+    geom_smooth(se=FALSE,method="lm",color=brewer.pal(3,"Dark2")[1]) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Incidents of Arson",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Incidents",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) + theme(
+      legend.position="none"
+    ) + scale_color_viridis_c()
+```
+
+The number of incidents of arson is clearly trending **downward** across the province.
+
+## How do charges of possession of stolen property vary by region?
+
+```{r}
+  title <- "Total Charges of Possession of Stolen Property By Region" |>
+  str_wrap(50)
+
+  data |>
+  group_by(geography) |>
+  summarize(possession_of_stolen_property=sum(possession_of_stolen_property)) |>
+  ggplot(aes(x=reorder(geography,possession_of_stolen_property))) +
+  geom_col(aes(y=possession_of_stolen_property,fill=possession_of_stolen_property),color="black") +
+  theme(legend.position="none") +
+  labs(
+    title=str_wrap("Total Charges of Possession of Stolen Property By Region",width=50),
+    x="Region",
+    y="Charges",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  coord_flip() +
+  scale_fill_viridis_c()
+```
+
+The **Northeast Avalon** region is first in terms of the number of charges of stolen property laid.
+
+## Is there a trend in the number of charges of possession of stolen property across the province?
+
+```{r}
+  data |>
+    group_by(year) |>
+    summarize(possession_of_stolen_property=sum(possession_of_stolen_property)) |>
+    ggplot(aes(year,possession_of_stolen_property)) +
+    geom_line(aes(color=possession_of_stolen_property),linewidth=1) +
+    geom_smooth(se=FALSE,method="lm",color=brewer.pal(3,"Dark2")[1]) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Charges of Possession of Stolen Property",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Incidents",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) + theme(
+      legend.position="none"
+    ) + scale_color_viridis_c()
+```
+
+Across the province, charges of possession of stolen property are **decreasing** over time.
+
+# On the Road
+
+## How do the incidents of impaired driving vary by region?
+
+```{r}
+  data |>
+  group_by(geography) |>
+  summarize(total_impaired_driving=sum(total_impaired_driving)) |>
+  ggplot(aes(x=reorder(geography,total_impaired_driving))) +
+  geom_col(aes(y=total_impaired_driving,fill=total_impaired_driving),color="black") +
+  theme(legend.position="none") +
+  labs(
+    title="Total Impaired Driving Charges By Region",
+    x="Region",
+    y="Charges",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  coord_flip() +
+  scale_fill_viridis_c()
+```
+
+The **Northeast Avalon** leads in terms of total impaired driving charges.
+
+## What is the trend in total impaired driving charge across the province?
+
+```{r}
+  data |>
+    group_by(year) |>
+    summarize(total_impaired_driving=sum(total_impaired_driving)) |>
+    ggplot(aes(year,total_impaired_driving)) +
+    geom_line(aes(color=total_impaired_driving),linewidth=1) +
+    geom_smooth(se=FALSE,method="lm",color=brewer.pal(3,"Dark2")[1]) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Impaired Driving Charges",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Charges",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) + scale_color_viridis_c() +
+    theme(
+      legend.position="none"
+    )
+```
+
+There is a definite **increase** in the number of impaired driving charges over time.
+
+## How do the number of impaired operation charges causing injury or death vary over time?
+
+```{r}
+  data |>
+    distinct(geography,year,.keep_all=TRUE) |>
+    group_by(year) |>
+    reframe(
+      impaired_operation_causing_bodily_harm=sum(impaired_operation_causing_bodily_harm),
+      impaired_operation_causing_death=sum(impaired_operation_causing_death),
+    ) |>
+    pivot_longer(
+      cols=c(impaired_operation_causing_bodily_harm,impaired_operation_causing_death),
+      names_to="impaired_operation_type",
+      values_to="impaired_operation_amount"
+    ) |>
+      mutate(impaired_operation_type=str_replace(impaired_operation_type,"impaired_operation_causing_bodily_harm", "Causing Bodily Harm")) |>
+      mutate(impaired_operation_type=str_replace(impaired_operation_type,"impaired_operation_causing_death","Causing Death")) |>
+      ggplot(aes(year)) +
+      geom_col(aes(y=impaired_operation_amount,fill=impaired_operation_type),position="dodge2",color="black") +
+  theme(
+    legend.position="bottom"
+  ) + labs(
+    title="Total Charges of Impaired Operation By Type",
+    subtitle="Newfoundland and Labrador",
+    x="Year",
+    y="Charges",
+    caption="Data from Open Data Newfoundland and Labrador",
+    fill="Legend"
+  ) + guides(
+    color="none"
+  ) + scale_fill_viridis_d() +
+  scale_x_continuous(breaks=seq(2006,2020,1))
+```
+
+Incidents of impaired operation that resulted in bodily harm or death made up a small proportion of the total incidents of impaired operation.
+
+## How does the number of prohibited drivers on the road vary by region?
+
+```{r}
+  data |>
+  group_by(geography) |>
+  summarize(driving_while_prohibited=sum(driving_while_prohibited)) |>
+  ggplot(aes(x=reorder(geography,driving_while_prohibited))) +
+  geom_col(aes(y=driving_while_prohibited,fill=driving_while_prohibited),color="black") +
+  theme(legend.position="none") +
+  labs(
+    title="Total Prohibited Driver Charges By Region",
+    x="Region",
+    y="Charges",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  coord_flip() +
+  scale_fill_viridis_c()
+```
+
+The **Northeast Avalon** leads in terms of prohibited drivers on the road.
+
+## Is there a trend in the number of prohibited drivers across the province?
+
+```{r}
+  data |>
+    group_by(year) |> 
+    summarize(driving_while_prohibited=sum(driving_while_prohibited)) |>
+    ggplot(aes(year,driving_while_prohibited)) +
+    geom_line(aes(color=driving_while_prohibited),linewidth=1) +
+    geom_smooth(se=FALSE,method="lm",color=brewer.pal(3,"Dark2")[1]) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Driving While Prohibited Charges",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Charges",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) +
+    scale_color_viridis_c() +
+    theme(
+      legend.position="none"
+    )
+```
+
+It would appear that the number of prohibited drivers on the road is **increasing** with time.
+
+# Drugs and Controlled Substances
+
+## How do the arrests for cannabis possession vary across regions?
+
+```{r}
+  data |>
+  group_by(geography) |>
+  summarize(posession_cannabis=sum(posession_cannabis)) |>
+  ggplot(aes(x=reorder(geography,posession_cannabis))) +
+  geom_col(aes(y=posession_cannabis,fill=posession_cannabis),color="black") +
+  theme(legend.position="none") +
+  labs(
+    title="Total Arrests for Cannabis Possession By Region",
+    x="Region",
+    y="Arrests",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  coord_flip() +
+  scale_fill_viridis_c()
+```
+
+The **Northeast Avalon** is the leader in terms of arrests for cannabis possession.
+
+## Is there a trend in the number of arrests for cannabis possession across the province?
+
+```{r}
+  data |>
+    group_by(year) |>
+    summarize(posession_cannabis=sum(posession_cannabis)) |>
+    ggplot(aes(year,posession_cannabis)) +
+    geom_line(aes(color=posession_cannabis),linewidth=1) +
+    geom_smooth(se=FALSE,method="lm",color=brewer.pal(3,"Dark2")[1]) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Arrests for Cannabis Possession",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Arrests",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) +
+    scale_color_viridis_c() +
+    theme(
+      legend.position="none"
+    )
+```
+
+There has been a general trend **downward** in the number of arrests for cannabis possession. In particular there was a steep drop in the number of arrests in 2018; this may coincide with the [legalization of cannabis in Canada](https://en.wikipedia.org/wiki/Legal_history_of_cannabis_in_Canada) in October of 2018.
+
+## How do the number of arrests for the posession of cocaine vary by region?
+
+```{r}
+  data |>
+  group_by(geography) |>
+  summarize(possession_cocaine=sum(possession_cocaine)) |>
+  ggplot(aes(x=reorder(geography,possession_cocaine))) +
+  geom_col(aes(y=possession_cocaine,fill=possession_cocaine),color="black") +
+  theme(legend.position="none") +
+  labs(
+    title="Total Arrests for Cocaine Possession By Region",
+    x="Region",
+    y="Arrests",
+    caption="Data from Open Data Newfoundland and Labrador",
+    subtitle="Newfoundland and Labrador (2006-2020)"
+  ) +
+  coord_flip() +
+  scale_fill_viridis_c()
+```
+
+The **Northeast Avalon** region ranks first in terms of arrests for cocaine possession.
+
+## Is there a trend in the number of arrests for cocaine possession across the province?
+
+```{r}
+  data |>
+    group_by(year) |>
+    summarize(possession_cocaine=sum(possession_cocaine)) |>
+    ggplot(aes(year,possession_cocaine)) +
+    geom_line(aes(color=possession_cocaine),linewidth=1) +
+    geom_smooth(se=FALSE,method="lm",color=brewer.pal(3,"Dark2")[1]) +
+    scale_x_continuous(breaks=seq(2006,2020,1)) +
+    labs(
+      title="Total Arrests for Cocaine Possession",
+      subtitle="Newfoundland and Labrador",
+      x = "Year",
+      y = "Arrests",
+      caption="Data from Open Data Newfoundland and Labrador"
+    ) +
+    scale_color_viridis_c() +
+    theme(
+      legend.position="none"
+    )
+```
+
+There is a clear, **positive** trend in the number of arrests for cocaine possession over time in the province.
+
+# Summary
+
+The dominance of the **Northeast Avalon** region in terms of total crimes committed cannot be ignored. This result is perhaps to be expected, however; the **Northeast Avalon** is home to over [200,000](https://www150.statcan.gc.ca/n1/daily-quotidien/200131/t002c-eng.htm) people, nearly half of the entire population of the province. This may, in part, explain why the region dominates in terms of total crimes committed across a broad spectrum of offences. 
+
+This study has obvious weaknesses:
+
+1. This study only considers the charges that are laid as the result of a crime being committed. It does **not** take into consideration the following court proceedings and their outcomes (e.g. whether the party responsible is found innocent or guilty, whether the charges were dropped and so on).
+
+# Conclusion
+
+The **Northeast Avalon** region of Newfoundland and Labrador, being the most populated in the province, is also host to the majority of its crime. However, this study has demonstrated that the problem of growing crime rates is not isolated to that region alone. The number of offences across the province is **increasing** for a broad spectrum of criminal activity. This will continue to pose a challenge for law enforcement.
