@@ -516,7 +516,11 @@ accuracy
 table(Predicted = test$predicted, Actual = test$geography)
 ```
 
-The results indicate that crime patterns contain meaningful geographic signal, as demonstrated by the model’s ability to predict police regions with approximately 67% accuracy. This suggests that different regions exhibit distinct combinations of crime types, proportions, and temporal trends that can be used to differentiate them. While the model does not achieve perfect classification, its performance indicates that the structure and composition of crime data provide useful information about geographic variation. Both the relative distribution of offences and changes over time appear to contribute to distinguishing between regions. However, the imperfect accuracy also highlights limitations, as some regions likely share similar crime profiles, making complete separation difficult. This suggests that while crime characteristics are not randomly distributed across space, they do not fully determine geographic classification. Overall, the findings support the conclusion that regional crime patterns exhibit systematic differences, though predictive performance is constrained by overlap between regions and the available set of predictors.
+The results indicate that crime patterns contain meaningful geographic signal, as demonstrated by the model’s ability to predict police regions with approximately 67% accuracy. This suggests that different regions exhibit distinct combinations of crime types, proportions, and temporal trends that can be used to differentiate them. While the model does not achieve perfect classification, its performance indicates that the structure and composition of crime data provide useful information about geographic variation. 
+
+Both the relative distribution of offences and changes over time appear to contribute to distinguishing between regions. However, the imperfect accuracy also highlights limitations, as some regions likely share similar crime profiles, making complete separation difficult. This suggests that while crime characteristics are not randomly distributed across space, they do not fully determine geographic classification. 
+
+Overall, the findings support the conclusion that regional crime patterns exhibit systematic differences, though predictive performance is constrained by overlap between regions and the available set of predictors.
 
 # Conclusion
 
