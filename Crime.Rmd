@@ -325,8 +325,6 @@ report substantially lower totals, with several showing only minimal levels. The
 
 ```{r}
 library(randomForest)
-library(dplyr)
-library(janitor)
 
 # 1. Prepare data
 df <- data %>%
@@ -336,6 +334,8 @@ df <- data %>%
     year,
     geography,
     homicide,
+    manslaughter,
+    attempted_murder,
     total_robbery,
     total_theft_under_5_000,
     total_theft_over_5_000,
@@ -352,7 +352,10 @@ df <- data %>%
 # 2. Feature engineering
 df <- df %>%
   mutate(
-    total_crime = homicide + total_robbery +
+    total_crime = homicide +
+                  manslaughter +
+                  attempted_murder +
+                  total_robbery +
                   total_theft_under_5_000 +
                   total_theft_over_5_000 +
                   assault_level_1 +
@@ -364,8 +367,12 @@ df <- df %>%
     prop_assault_l1 = assault_level_1 / total_crime,
     prop_assault_l2 = assault_level_2_with_weapon_or_causing_bodily_harm / total_crime,
     prop_assault_l3 = assault_level_3_aggravated / total_crime,
+    prop_manslaughter = manslaughter / total_crime,
+    prop_attempted_murder = attempted_murder / total_crime,
 
-    violent_ratio = (assault_level_1 +
+    violent_ratio = (manslaughter +
+                     attempted_murder +
+                     assault_level_1 +
                      assault_level_2_with_weapon_or_causing_bodily_harm +
                      assault_level_3_aggravated) / total_crime
   ) %>%
@@ -409,6 +416,9 @@ for (m in mtry_vals) {
         geography ~ 
           year +
           total_crime +
+          homicide +
+          manslaughter +
+          attempted_murder +
           total_robbery +
           total_theft_under_5_000 +
           total_theft_over_5_000 +
@@ -420,6 +430,8 @@ for (m in mtry_vals) {
           prop_assault_l1 +
           prop_assault_l2 +
           prop_assault_l3 +
+          prop_manslaughter +
+          prop_attempted_murder +
           violent_ratio +
           total_crime_lag1 +
           total_crime_lag2 +
@@ -464,7 +476,7 @@ table(Predicted = test$predicted, Actual = test$geography)
 ```
 
 The results indicate that crime patterns do indeed contain meaningful geographic signals, as
-demonstrated by the ability of the model to predict police regions with approximately 60% accuracy. This suggests that different regions exhibit different combinations of crime types, proportions and temporal trends, which can be used to differentiate them. The model does not achieve perfect classification, but its performance demonstrates that structure and composition of crime data provide valuable information about geographic variation. Both the relative distribution of offences and changes over time contribute to distinguishing between regions. The findings support the conclusion that crime characteristics are not randomly distributed across space, but instead reflect underlying regional patterns. Further improvements could be achieved by, for example, incorporating additional variables.
+demonstrated by the ability of the model to predict police regions with approximately 61% accuracy. This suggests that different regions exhibit different combinations of crime types, proportions and temporal trends, which can be used to differentiate them. The model does not achieve perfect classification, but its performance demonstrates that structure and composition of crime data provide valuable information about geographic variation. Both the relative distribution of offences and changes over time contribute to distinguishing between regions. The findings support the conclusion that crime characteristics are not randomly distributed across space, but instead reflect underlying regional patterns. Further improvements could be achieved by, for example, incorporating additional variables.
 
 # Conclusion
 
@@ -474,4 +486,4 @@ Across all crime categories there is a consistent pattern that emerges in the sp
 
 The composition of crime in the province is notably skewed toward less severe offences. For example, Level 1 assaults and thefts under $5000 account for the vast majority of incidents, while more serious crimes such as aggravated assault, high-value theft and homicide remain relatively rare. This indicates that overall crime levels are drive more by high-frequency, lower-severity offences than by severe (but infrequent) events.
 
-Modeling further reinforces these findings by demonstrating that crime patterns contain meaningful geographic signals. With a classification accuracy of approximately 60%, the model shows that regions can reasonably be distinguished based on the types of crimes committed, their relative proportions and their evolution over time. Though not a perfect result, this level of accuracy confirms that crime is not randomly distributed, but instead reflects underlying regional patterns.
+Modeling further reinforces these findings by demonstrating that crime patterns contain meaningful geographic signals. With a classification accuracy of approximately 61%, the model shows that regions can reasonably be distinguished based on the types of crimes committed, their relative proportions and their evolution over time. Though not a perfect result, this level of accuracy confirms that crime is not randomly distributed, but instead reflects underlying regional patterns.
